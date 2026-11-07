@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Clapperboard, Ticket, LogOut, Menu, X } from 'lucide-react';
+import { Clapperboard, Ticket, LogOut, Menu, X, Shield } from 'lucide-react';
 
 export const Navbar = () => {
-  const { user, isAuthenticated, logout, openLogin, openRegister } = useAuth();
+  const { user, isAdmin, isAuthenticated, logout, openLogin, openRegister } = useAuth();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
@@ -54,6 +54,20 @@ export const Navbar = () => {
                 <Ticket className="w-4 h-4" />
                 My Bookings
               </Link>
+
+              {isAdmin && (
+                <Link
+                  to="/admin/dashboard"
+                  className={`px-3.5 py-2 rounded-lg text-sm font-bold transition-colors flex items-center gap-1.5 ${
+                    isActive('/admin/dashboard')
+                      ? 'text-amber-400 bg-amber-500/15 border border-amber-500/30'
+                      : 'text-amber-400/90 hover:text-amber-300 hover:bg-amber-500/10'
+                  }`}
+                >
+                  <Shield className="w-4 h-4 text-amber-400" />
+                  Admin Console
+                </Link>
+              )}
             </div>
           </div>
 
@@ -65,12 +79,23 @@ export const Navbar = () => {
                   onClick={() => setUserDropdownOpen(!userDropdownOpen)}
                   className="flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-slate-900 border border-slate-800 hover:border-slate-700 transition-all text-left"
                 >
-                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-rose-500 to-indigo-600 flex items-center justify-center text-white text-xs font-bold uppercase shadow">
+                  <div
+                    className={`w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-bold uppercase shadow ${
+                      isAdmin
+                        ? 'bg-gradient-to-br from-amber-500 to-rose-600'
+                        : 'bg-gradient-to-br from-rose-500 to-indigo-600'
+                    }`}
+                  >
                     {user?.name ? user.name.slice(0, 2) : 'US'}
                   </div>
-                  <span className="text-sm font-medium text-slate-200 max-w-[120px] truncate">
-                    {user?.name || user?.email}
-                  </span>
+                  <div className="flex flex-col text-left">
+                    <span className="text-sm font-medium text-slate-200 max-w-[120px] truncate leading-tight">
+                      {user?.name || user?.email}
+                    </span>
+                    <span className="text-[10px] font-mono text-slate-500">
+                      {isAdmin ? 'ADMIN' : 'USER'}
+                    </span>
+                  </div>
                 </button>
 
                 {/* Dropdown Menu */}
@@ -82,7 +107,23 @@ export const Navbar = () => {
                     <div className="px-4 py-2 border-b border-slate-800/80">
                       <p className="text-xs text-slate-400">Signed in as</p>
                       <p className="text-sm font-semibold text-slate-100 truncate">{user?.email}</p>
+                      {isAdmin && (
+                        <span className="mt-1 inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                          Administrator
+                        </span>
+                      )}
                     </div>
+
+                    {isAdmin && (
+                      <Link
+                        to="/admin/dashboard"
+                        onClick={() => setUserDropdownOpen(false)}
+                        className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-amber-300 hover:text-white hover:bg-slate-800/60 transition-colors"
+                      >
+                        <Shield className="w-4 h-4 text-amber-400" />
+                        Admin Dashboard
+                      </Link>
+                    )}
 
                     <Link
                       to="/my-bookings"
@@ -161,12 +202,26 @@ export const Navbar = () => {
             My Bookings
           </Link>
 
+          {isAdmin && (
+            <Link
+              to="/admin/dashboard"
+              onClick={() => setMobileMenuOpen(false)}
+              className={`block px-3 py-2.5 rounded-xl text-sm font-bold text-amber-300 bg-amber-500/10 border border-amber-500/30`}
+            >
+              Admin Console
+            </Link>
+          )}
+
           <div className="pt-3 border-t border-slate-800">
             {isAuthenticated ? (
               <div className="space-y-3">
                 <div className="px-3 py-1">
-                  <div className="text-xs text-slate-500">Signed in as</div>
-                  <div className="text-sm font-semibold text-slate-200">{user?.name || user?.email}</div>
+                  <div className="text-xs text-slate-500">
+                    Signed in as ({isAdmin ? 'ADMIN' : 'USER'})
+                  </div>
+                  <div className="text-sm font-semibold text-slate-200">
+                    {user?.name || user?.email}
+                  </div>
                 </div>
                 <button
                   onClick={() => {

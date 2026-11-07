@@ -48,14 +48,18 @@ export const AuthProvider = ({ children }) => {
         id: data.userId,
         email: data.email,
         name: data.email.split('@')[0],
+        role: data.role || 'ROLE_USER',
       };
 
-      // Attempt to load full user profile for display name
+      // Attempt to load full user profile for display name and role
       try {
         localStorage.setItem('cinepass_token', authToken);
         const profile = await authApi.getUserProfile(data.userId);
         if (profile && profile.name) {
           userData.name = profile.name;
+        }
+        if (profile && profile.role) {
+          userData.role = profile.role;
         }
       } catch (profileErr) {
         console.warn('Could not load detailed profile, using basic info', profileErr);
@@ -111,6 +115,8 @@ export const AuthProvider = ({ children }) => {
       value={{
         token,
         user,
+        role: user?.role || 'ROLE_USER',
+        isAdmin: user?.role === 'ROLE_ADMIN',
         isAuthenticated: !!token && !!user,
         loading,
         login,
