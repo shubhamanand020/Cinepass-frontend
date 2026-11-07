@@ -236,21 +236,21 @@ export const SeatBookingPage = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <Link
           to={movie ? `/movie/${movie.id}` : '/'}
-          className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors group"
+          className="inline-flex items-center gap-2 text-sm text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors group"
         >
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
           <span>{movie ? `Back to ${movie.title}` : 'Back'}</span>
         </Link>
 
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold">
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-xs font-semibold">
             <ShieldCheck className="w-3.5 h-3.5" />
             5-Min Atomic Seat Engine
           </div>
 
           <button
             onClick={loadShowAndSeats}
-            className="flex items-center gap-1 px-3 py-1 rounded-lg text-xs font-semibold text-slate-400 hover:text-white bg-slate-900 border border-slate-800 hover:border-slate-700 transition-colors"
+            className="flex items-center gap-1 px-3 py-1 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 border border-slate-200 dark:text-slate-400 dark:hover:text-white dark:bg-slate-900 dark:border-slate-800 dark:hover:border-slate-700 transition-colors"
           >
             <RefreshCw className="w-3 h-3" />
             Refresh Seats
@@ -259,27 +259,27 @@ export const SeatBookingPage = () => {
       </div>
 
       {/* Show & Movie Title Banner */}
-      <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-rose-400 mb-1">
+          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400 mb-1">
             <Film className="w-3.5 h-3.5" />
             <span>{screen?.theatreName || 'Cinepass Premier Cinemas'}</span>
             <span>•</span>
             <span>{screen?.name || `Screen ${show.screenId}`}</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             {movie?.title || `Show #${show.id}`}
           </h1>
         </div>
 
-        <div className="flex items-center gap-4 text-xs sm:text-sm text-slate-300">
-          <div className="flex items-center gap-1.5 bg-slate-950 px-3.5 py-2 rounded-xl border border-slate-800 font-mono">
+        <div className="flex items-center gap-4 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+          <div className="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-950 px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-800 font-mono text-slate-800 dark:text-slate-200">
             <Clock className="w-4 h-4 text-rose-500" />
             <span>{formatShowTime(show.showTime)}</span>
           </div>
 
-          <div className="flex items-center gap-1.5 bg-slate-950 px-3.5 py-2 rounded-xl border border-slate-800">
-            <Armchair className="w-4 h-4 text-purple-400" />
+          <div className="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-950 px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200">
+            <Armchair className="w-4 h-4 text-purple-500 dark:text-purple-400" />
             <span>₹{show.basePrice || 250} / ₹{show.premiumPrice || 350}</span>
           </div>
         </div>
@@ -288,7 +288,7 @@ export const SeatBookingPage = () => {
       {/* Main Grid & Summary Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Left Section: Screen & Interactive Seat Map */}
-        <div className="lg:col-span-8 p-6 sm:p-8 rounded-3xl bg-slate-950 border border-slate-800/80 shadow-2xl flex flex-col items-center">
+        <div className="lg:col-span-8 p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800/80 shadow-sm dark:shadow-2xl flex flex-col items-center">
           {/* Cinema Screen Visual Curve */}
           <ScreenVisual />
 

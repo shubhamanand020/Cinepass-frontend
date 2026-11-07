@@ -54,37 +54,37 @@ export const BookingConfirmationModal = ({
           /* Confirmation Review Step */
           <>
             <div className="space-y-4">
-              <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3">
+              <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-3">
                 <div className="flex items-start justify-between">
                   <div>
-                    <h4 className="font-extrabold text-base text-white">
+                    <h4 className="font-extrabold text-base text-slate-900 dark:text-white">
                       {movie?.title || 'Selected Movie'}
                     </h4>
-                    <p className="text-xs text-rose-400 font-semibold mt-0.5">
+                    <p className="text-xs text-rose-600 dark:text-rose-400 font-semibold mt-0.5">
                       {movie?.language || 'English'} • {movie?.genre || 'Cinema'}
                     </p>
                   </div>
-                  <span className="px-2.5 py-1 rounded-md bg-amber-500/15 text-amber-300 border border-amber-500/30 text-[10px] font-bold uppercase tracking-wider">
+                  <span className="px-2.5 py-1 rounded-md bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30 text-[10px] font-bold uppercase tracking-wider">
                     Seat Lock Active
                   </span>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 text-xs pt-2 border-t border-slate-800/80 text-slate-300">
+                <div className="grid grid-cols-2 gap-3 text-xs pt-2 border-t border-slate-200 dark:border-slate-800/80 text-slate-700 dark:text-slate-300">
                   <div className="flex items-center gap-1.5">
-                    <Clock className="w-3.5 h-3.5 text-slate-500" />
+                    <Clock className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
                     <span>{formatShowTime(show?.showTime)}</span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <Armchair className="w-3.5 h-3.5 text-slate-500" />
+                    <Armchair className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
                     <span>Seats: {seats.join(', ')}</span>
                   </div>
                 </div>
               </div>
 
               {/* Price summary */}
-              <div className="flex items-center justify-between p-4 rounded-xl bg-slate-950/60 border border-slate-800 text-sm">
-                <span className="text-slate-400 font-medium">Total Amount Due</span>
-                <span className="text-xl font-extrabold text-emerald-400 font-mono">
+              <div className="flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 text-sm">
+                <span className="text-slate-600 dark:text-slate-400 font-medium">Total Amount Due</span>
+                <span className="text-xl font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">
                   ₹{total}
                 </span>
               </div>
@@ -95,7 +95,7 @@ export const BookingConfirmationModal = ({
                 type="button"
                 onClick={onClose}
                 disabled={loading}
-                className="w-1/3 py-3 px-4 rounded-xl font-semibold text-xs text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 transition-colors"
+                className="w-1/3 py-3 px-4 rounded-xl font-semibold text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 transition-colors"
               >
                 Back
               </button>

@@ -168,18 +168,18 @@ export const MyBookingsPage = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center gap-3">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-3">
             <Ticket className="w-8 h-8 text-rose-500" />
             My Bookings & Tickets
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
             Access your cinema passes, view allocation statuses, or manage cancellations.
           </p>
         </div>
 
         <button
           onClick={fetchBookings}
-          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 border border-slate-800 hover:border-slate-700 transition-colors self-start sm:self-auto"
+          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 border border-slate-200 dark:text-slate-300 dark:hover:text-white dark:bg-slate-900 dark:border-slate-800 dark:hover:border-slate-700 transition-colors self-start sm:self-auto"
         >
           <RefreshCw className="w-3.5 h-3.5" />
           Refresh Passes
@@ -187,13 +187,13 @@ export const MyBookingsPage = () => {
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex items-center gap-2 border-b border-slate-800/80 pb-3">
+      <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800/80 pb-3">
         <button
           onClick={() => setActiveTab('ALL')}
           className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
             activeTab === 'ALL'
               ? 'bg-rose-600 text-white shadow-lg shadow-rose-600/30'
-              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-900'
           }`}
         >
           All Passes ({bookings.length})
@@ -203,7 +203,7 @@ export const MyBookingsPage = () => {
           className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
             activeTab === 'CONFIRMED'
               ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/30'
-              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-900'
           }`}
         >
           Confirmed (
@@ -213,8 +213,8 @@ export const MyBookingsPage = () => {
           onClick={() => setActiveTab('CANCELLED')}
           className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
             activeTab === 'CANCELLED'
-              ? 'bg-slate-800 text-white'
-              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+              ? 'bg-slate-700 dark:bg-slate-800 text-white'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-900'
           }`}
         >
           Cancelled / Expired (
@@ -228,10 +228,10 @@ export const MyBookingsPage = () => {
           <p className="text-xs text-slate-400">Loading your cinema bookings...</p>
         </div>
       ) : error ? (
-        <div className="p-8 rounded-2xl bg-slate-900/40 border border-slate-800 text-center space-y-3">
+        <div className="p-8 rounded-2xl bg-slate-100 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 text-center space-y-3">
           <AlertCircle className="w-10 h-10 text-amber-500 mx-auto" />
-          <h3 className="text-lg font-semibold text-slate-200">Unable to Load Bookings</h3>
-          <p className="text-sm text-slate-400 max-w-md mx-auto">{error}</p>
+          <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200">Unable to Load Bookings</h3>
+          <p className="text-sm text-slate-600 dark:text-slate-400 max-w-md mx-auto">{error}</p>
           <button
             onClick={fetchBookings}
             className="mt-2 px-4 py-2 text-xs font-medium text-white bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors"
@@ -240,12 +240,12 @@ export const MyBookingsPage = () => {
           </button>
         </div>
       ) : filteredBookings.length === 0 ? (
-        <div className="p-12 rounded-3xl bg-slate-900/40 border border-slate-800 text-center space-y-4">
-          <div className="w-16 h-16 mx-auto rounded-2xl bg-slate-800/80 flex items-center justify-center text-slate-500">
+        <div className="p-12 rounded-3xl bg-slate-100 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 text-center space-y-4">
+          <div className="w-16 h-16 mx-auto rounded-2xl bg-slate-200 dark:bg-slate-800/80 flex items-center justify-center text-slate-400 dark:text-slate-500">
             <Ticket className="w-8 h-8" />
           </div>
-          <h3 className="text-lg font-bold text-slate-200">No Passes in this Section</h3>
-          <p className="text-sm text-slate-400 max-w-md mx-auto">
+          <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200">No Passes in this Section</h3>
+          <p className="text-sm text-slate-600 dark:text-slate-400 max-w-md mx-auto">
             {activeTab === 'ALL'
               ? "You haven't reserved any movie tickets yet. Pick a movie from our catalog to book your first cinema ticket."
               : `No tickets matching filter "${activeTab}".`}
@@ -276,7 +276,7 @@ export const MyBookingsPage = () => {
             return (
               <div
                 key={bId}
-                className="rounded-3xl bg-slate-900/80 border border-slate-800/90 shadow-2xl overflow-hidden flex flex-col justify-between hover:border-slate-700 transition-all duration-300"
+                className="rounded-3xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800/90 shadow-sm dark:shadow-2xl overflow-hidden flex flex-col justify-between hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-300"
               >
                 {/* Ticket Top Half */}
                 <div className="p-6 space-y-4">
@@ -290,13 +290,13 @@ export const MyBookingsPage = () => {
                         />
                       </div>
                       <div>
-                        <div className="text-[10px] uppercase font-mono text-slate-500 tracking-wider">
+                        <div className="text-[10px] uppercase font-mono text-slate-400 dark:text-slate-500 tracking-wider">
                           REF #{bId}
                         </div>
-                        <h3 className="text-base font-extrabold text-white leading-tight">
+                        <h3 className="text-base font-extrabold text-slate-900 dark:text-white leading-tight">
                           {movie?.title || `Show #${booking.showId}`}
                         </h3>
-                        <p className="text-xs text-rose-400 font-semibold mt-0.5">
+                        <p className="text-xs text-rose-600 dark:text-rose-400 font-semibold mt-0.5">
                           {movie?.language || 'English'} • {movie?.genre || 'Cinema'}
                         </p>
                       </div>
@@ -306,10 +306,10 @@ export const MyBookingsPage = () => {
                     <span
                       className={`px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider border shrink-0 ${
                         isConfirmed
-                          ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
+                          ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30'
                           : isHeld
-                          ? 'bg-amber-500/15 text-amber-400 border-amber-500/30'
-                          : 'bg-rose-500/15 text-rose-400 border-rose-500/30'
+                          ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/30'
+                          : 'bg-rose-500/15 text-rose-600 dark:text-rose-400 border-rose-500/30'
                       }`}
                     >
                       {booking.status}
@@ -317,31 +317,31 @@ export const MyBookingsPage = () => {
                   </div>
 
                   {/* Show and Screen details */}
-                  <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-2 text-xs text-slate-300">
+                  <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 space-y-2 text-xs text-slate-700 dark:text-slate-300">
                     <div className="flex justify-between items-center">
-                      <span className="text-slate-400 flex items-center gap-1.5">
-                        <Clock className="w-3.5 h-3.5 text-slate-500" />
+                      <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                        <Clock className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
                         Screening Time
                       </span>
-                      <span className="font-semibold text-slate-200">
+                      <span className="font-semibold text-slate-900 dark:text-slate-200">
                         {formatShowTime(show?.showTime)}
                       </span>
                     </div>
 
                     <div className="flex justify-between items-center">
-                      <span className="text-slate-400 flex items-center gap-1.5">
-                        <Armchair className="w-3.5 h-3.5 text-slate-500" />
+                      <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                        <Armchair className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
                         Screen & Theatre
                       </span>
-                      <span className="font-semibold text-slate-200">
+                      <span className="font-semibold text-slate-900 dark:text-slate-200">
                         {screen?.name || `Screen ${show?.screenId || 1}`} (
                         {screen?.theatreName || 'Premier Cinema'})
                       </span>
                     </div>
 
-                    <div className="flex justify-between items-center pt-1 border-t border-slate-800/60">
-                      <span className="text-slate-400">Allocated Seats</span>
-                      <span className="font-extrabold text-rose-400 font-mono">
+                    <div className="flex justify-between items-center pt-1 border-t border-slate-200 dark:border-slate-800/60">
+                      <span className="text-slate-500 dark:text-slate-400">Allocated Seats</span>
+                      <span className="font-extrabold text-rose-600 dark:text-rose-400 font-mono">
                         {seats.join(', ') || 'N/A'}
                       </span>
                     </div>
@@ -350,13 +350,13 @@ export const MyBookingsPage = () => {
 
                 {/* Perforated Stub Divider */}
                 <div className="relative flex items-center justify-between px-2">
-                  <div className="w-4 h-8 rounded-r-full bg-slate-950 border-r border-t border-b border-slate-800 -ml-2" />
-                  <div className="flex-1 border-b-2 border-dashed border-slate-800 mx-2" />
-                  <div className="w-4 h-8 rounded-l-full bg-slate-950 border-l border-t border-b border-slate-800 -mr-2" />
+                  <div className="w-4 h-8 rounded-r-full bg-slate-50 dark:bg-slate-950 border-r border-t border-b border-slate-200 dark:border-slate-800 -ml-2" />
+                  <div className="flex-1 border-b-2 border-dashed border-slate-200 dark:border-slate-800 mx-2" />
+                  <div className="w-4 h-8 rounded-l-full bg-slate-50 dark:bg-slate-950 border-l border-t border-b border-slate-200 dark:border-slate-800 -mr-2" />
                 </div>
 
                 {/* Ticket Bottom Stub */}
-                <div className="p-6 bg-slate-950/50 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+                <div className="p-6 bg-slate-50/70 dark:bg-slate-950/50 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
                   <div className="flex items-center gap-3">
                     <button
                       onClick={() => isConfirmed && handleOpenQr(booking)}
@@ -399,7 +399,7 @@ export const MyBookingsPage = () => {
                         <button
                           onClick={() => handleDirectDownload(bId)}
                           disabled={downloadingId === bId}
-                          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-200 hover:text-white bg-slate-800 hover:bg-slate-700 px-3 py-2 rounded-xl transition-all border border-slate-700"
+                          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 dark:text-slate-200 dark:hover:text-white dark:bg-slate-800 dark:hover:bg-slate-700 px-3 py-2 rounded-xl transition-all border border-slate-200 dark:border-slate-700"
                         >
                           <Download className={`w-3.5 h-3.5 ${downloadingId === bId ? 'animate-bounce' : ''}`} />
                           {downloadingId === bId ? 'Saving...' : 'PDF Pass'}
@@ -408,7 +408,7 @@ export const MyBookingsPage = () => {
                         <button
                           onClick={() => handleCancel(bId)}
                           disabled={cancellingId === bId}
-                          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 px-2.5 py-2 rounded-xl transition-colors border border-transparent hover:border-rose-500/20"
+                          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-rose-600 hover:bg-rose-50 dark:text-slate-400 dark:hover:text-rose-400 dark:hover:bg-rose-500/10 px-2.5 py-2 rounded-xl transition-colors border border-transparent hover:border-rose-200 dark:hover:border-rose-500/20"
                         >
                           <XCircle className="w-3.5 h-3.5" />
                           {cancellingId === bId ? 'Releasing...' : 'Cancel'}

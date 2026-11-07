@@ -76,21 +76,21 @@ export const QrTicketModal = ({
     >
       <div className="space-y-5 animate-fadeIn">
         {/* Pass Header Banner */}
-        <div className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-950 border border-slate-800">
+        <div className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
           <div>
             <span className="text-[10px] font-mono uppercase text-slate-500">Official Pass</span>
-            <p className="text-sm font-bold text-white flex items-center gap-1.5">
+            <p className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
               <Ticket className="w-4 h-4 text-rose-500" />
               REF #{bId}
             </p>
           </div>
           <div>
             {isCheckedIn ? (
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20">
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
                 <CheckCircle2 className="w-3.5 h-3.5" /> Checked In
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
                 <CheckCircle2 className="w-3.5 h-3.5" /> Admission Valid
               </span>
             )}
@@ -120,47 +120,47 @@ export const QrTicketModal = ({
               onClick={handleCopyToken}
               className="flex items-center gap-1 text-[11px] font-semibold text-rose-600 hover:text-rose-700 transition-colors"
             >
-              {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+              {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5 text-slate-500" />}
               {copied ? 'Copied' : 'Copy'}
             </button>
           </div>
         </div>
 
         {/* Screening Details Summary */}
-        <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-2.5 text-xs text-slate-300">
+        <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 space-y-2.5 text-xs text-slate-700 dark:text-slate-300">
           <div className="flex justify-between items-center">
-            <span className="text-slate-400">Movie</span>
-            <span className="font-bold text-white text-right max-w-[200px] truncate">
+            <span className="text-slate-500 dark:text-slate-400">Movie</span>
+            <span className="font-bold text-slate-900 dark:text-white text-right max-w-[200px] truncate">
               {movie?.title || `Show #${booking.showId}`}
             </span>
           </div>
 
           <div className="flex justify-between items-center">
-            <span className="text-slate-400 flex items-center gap-1">
-              <Building className="w-3.5 h-3.5 text-slate-500" />
+            <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1">
+              <Building className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
               Theatre & Screen
             </span>
-            <span className="font-semibold text-slate-200 text-right">
+            <span className="font-semibold text-slate-800 dark:text-slate-200 text-right">
               {screen?.name || `Screen ${show?.screenId || 1}`} • {screen?.theatreName || 'Cinepass Hall'}
             </span>
           </div>
 
           <div className="flex justify-between items-center">
-            <span className="text-slate-400 flex items-center gap-1">
-              <Clock className="w-3.5 h-3.5 text-slate-500" />
+            <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1">
+              <Clock className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
               Showtime
             </span>
-            <span className="font-semibold text-slate-200">
+            <span className="font-semibold text-slate-800 dark:text-slate-200">
               {show?.showTime ? new Date(show.showTime).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }) : 'N/A'}
             </span>
           </div>
 
-          <div className="flex justify-between items-center pt-2 border-t border-slate-800/80">
-            <span className="text-slate-400 flex items-center gap-1">
-              <Armchair className="w-3.5 h-3.5 text-slate-500" />
+          <div className="flex justify-between items-center pt-2 border-t border-slate-200 dark:border-slate-800/80">
+            <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1">
+              <Armchair className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
               Seats ({booking.seatNumbers?.length || 0})
             </span>
-            <span className="font-mono font-bold text-rose-400">
+            <span className="font-mono font-bold text-rose-600 dark:text-rose-400">
               {booking.seatNumbers?.join(', ')}
             </span>
           </div>
@@ -171,7 +171,7 @@ export const QrTicketModal = ({
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-semibold transition-colors"
+            className="flex-1 py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-300 text-sm font-semibold transition-colors"
           >
             Close
           </button>

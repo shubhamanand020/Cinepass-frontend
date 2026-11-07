@@ -106,18 +106,18 @@ export const HomePage = () => {
       <section id="catalog" className="space-y-6 pt-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center gap-3">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-3">
               <Film className="w-7 h-7 text-rose-500" />
               Now Showing in Theatres
             </h2>
-            <p className="text-sm text-slate-400 mt-1">
+            <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
               Explore showtimes, screen layouts, and reserve seats in real time.
             </p>
           </div>
 
           <button
             onClick={fetchMovies}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 border border-slate-800 hover:border-slate-700 transition-colors self-start sm:self-auto"
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 border border-slate-200 dark:text-slate-300 dark:hover:text-white dark:bg-slate-900 dark:border-slate-800 dark:hover:border-slate-700 transition-colors self-start sm:self-auto"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             Refresh Catalog
@@ -145,15 +145,15 @@ export const HomePage = () => {
             {[1, 2, 3, 4].map((n) => (
               <div
                 key={n}
-                className="aspect-[2/3] rounded-2xl bg-slate-900/60 border border-slate-800 animate-pulse"
+                className="aspect-[2/3] rounded-2xl bg-slate-200 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 animate-pulse"
               />
             ))}
           </div>
         ) : error ? (
-          <div className="p-10 rounded-3xl bg-slate-900/40 border border-slate-800 text-center space-y-3">
+          <div className="p-10 rounded-3xl bg-slate-100 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 text-center space-y-3">
             <AlertCircle className="w-10 h-10 text-amber-500 mx-auto" />
-            <h3 className="text-lg font-bold text-slate-200">Catalog Connection Idle</h3>
-            <p className="text-sm text-slate-400 max-w-md mx-auto">{error}</p>
+            <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200">Catalog Connection Idle</h3>
+            <p className="text-sm text-slate-600 dark:text-slate-400 max-w-md mx-auto">{error}</p>
             <button
               onClick={fetchMovies}
               className="mt-2 px-5 py-2.5 text-xs font-semibold text-white bg-rose-600 hover:bg-rose-500 rounded-xl transition-colors shadow-lg shadow-rose-600/30"
@@ -162,10 +162,10 @@ export const HomePage = () => {
             </button>
           </div>
         ) : filteredMovies.length === 0 ? (
-          <div className="p-12 rounded-3xl bg-slate-900/40 border border-slate-800 text-center space-y-3">
-            <Film className="w-12 h-12 text-slate-600 mx-auto" />
-            <h3 className="text-lg font-bold text-slate-200">No Matching Movies Found</h3>
-            <p className="text-sm text-slate-400 max-w-md mx-auto">
+          <div className="p-12 rounded-3xl bg-slate-100 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 text-center space-y-3">
+            <Film className="w-12 h-12 text-slate-400 dark:text-slate-600 mx-auto" />
+            <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200">No Matching Movies Found</h3>
+            <p className="text-sm text-slate-600 dark:text-slate-400 max-w-md mx-auto">
               We couldn't find any movies matching "{searchQuery || selectedGenre}". Try adjusting your filters.
             </p>
             {(searchQuery || selectedGenre !== 'ALL' || selectedLanguage !== 'ALL') && (
@@ -175,7 +175,7 @@ export const HomePage = () => {
                   setSelectedGenre('ALL');
                   setSelectedLanguage('ALL');
                 }}
-                className="mt-2 px-4 py-2 text-xs font-semibold text-rose-400 hover:text-rose-300 bg-rose-500/10 rounded-xl transition-colors"
+                className="mt-2 px-4 py-2 text-xs font-semibold text-rose-600 dark:text-rose-400 hover:text-rose-500 dark:hover:text-rose-300 bg-rose-500/10 rounded-xl transition-colors"
               >
                 Reset All Filters
               </button>

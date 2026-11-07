@@ -7,7 +7,7 @@ const FALLBACK_POSTER =
 
 export const MovieCard = ({ movie }) => {
   return (
-    <div className="group flex flex-col rounded-2xl overflow-hidden bg-slate-900/70 border border-slate-800/90 hover:border-rose-500/50 hover:bg-slate-900 transition-all duration-300 hover:shadow-2xl hover:shadow-rose-600/15 hover:-translate-y-1.5 flex-1">
+    <div className="group flex flex-col rounded-2xl overflow-hidden bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800/90 hover:border-rose-500/50 hover:bg-slate-50/80 dark:hover:bg-slate-900 transition-all duration-300 hover:shadow-2xl hover:shadow-rose-600/15 hover:-translate-y-1.5 flex-1 shadow-sm">
       {/* Poster Image Container */}
       <div className="aspect-[2/3] w-full bg-slate-950 relative overflow-hidden">
         <img
@@ -48,22 +48,22 @@ export const MovieCard = ({ movie }) => {
       {/* Movie Details Info */}
       <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
         <div>
-          <h3 className="font-bold text-base text-slate-100 group-hover:text-rose-400 transition-colors line-clamp-1">
+          <h3 className="font-bold text-base text-slate-900 dark:text-slate-100 group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-colors line-clamp-1">
             {movie.title}
           </h3>
-          <p className="text-xs text-slate-400 line-clamp-2 mt-1 leading-relaxed">
+          <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-2 mt-1 leading-relaxed">
             {movie.description || 'Experience this thrilling movie exclusively in theaters.'}
           </p>
         </div>
 
-        <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
+        <div className="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
           <div className="flex items-center gap-1.5 font-medium">
-            <Clock className="w-3.5 h-3.5 text-slate-500" />
+            <Clock className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
             <span>{movie.duration ? `${movie.duration}m` : '120m'}</span>
           </div>
 
           <div className="flex items-center gap-1.5 font-medium">
-            <Calendar className="w-3.5 h-3.5 text-slate-500" />
+            <Calendar className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
             <span>{movie.language || 'English'}</span>
           </div>
         </div>

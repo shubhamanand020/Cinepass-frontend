@@ -87,8 +87,8 @@ export const MovieDetailPage = () => {
     return (
       <div className="py-16 text-center space-y-4">
         <AlertCircle className="w-12 h-12 text-rose-500 mx-auto" />
-        <h2 className="text-xl font-bold text-slate-100">Film Not Found</h2>
-        <p className="text-sm text-slate-400 max-w-md mx-auto">
+        <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">Film Not Found</h2>
+        <p className="text-sm text-slate-600 dark:text-slate-400 max-w-md mx-auto">
           {error || 'Unable to retrieve details for this movie.'}
         </p>
         <Link
@@ -108,7 +108,7 @@ export const MovieDetailPage = () => {
       <div className="flex items-center justify-between">
         <Link
           to="/"
-          className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors group"
+          className="inline-flex items-center gap-2 text-sm text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors group"
         >
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
           <span>Back to All Movies</span>
@@ -123,7 +123,7 @@ export const MovieDetailPage = () => {
               alert('Link copied to clipboard!');
             }
           }}
-          className="p-2 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-slate-800 transition-colors"
+          className="p-2 rounded-xl text-slate-500 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 dark:text-slate-400 dark:hover:text-slate-200 dark:bg-slate-900 dark:border-slate-800 transition-colors"
           aria-label="Share movie"
         >
           <Share2 className="w-4 h-4" />
@@ -234,9 +234,9 @@ export const MovieDetailPage = () => {
 
               <button
                 onClick={() => setIsTrailerOpen(true)}
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl font-semibold text-sm text-slate-300 bg-slate-900 hover:bg-slate-800 border border-slate-800 transition-colors"
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl font-semibold text-sm text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 dark:text-slate-300 dark:bg-slate-900 dark:hover:bg-slate-800 dark:border-slate-800 transition-colors"
               >
-                <Play className="w-4 h-4 text-rose-400 fill-rose-400" />
+                <Play className="w-4 h-4 text-rose-500 fill-rose-500 dark:text-rose-400 dark:fill-rose-400" />
                 Play Official Trailer
               </button>
             </div>
@@ -247,15 +247,15 @@ export const MovieDetailPage = () => {
       {/* Showtimes & Screen Selection Section */}
       <section id="showtimes-section" className="space-y-6 pt-6">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-bold uppercase tracking-wider mb-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-bold uppercase tracking-wider mb-2">
             <Sparkles className="w-3.5 h-3.5" />
             Live Theatrical Schedule
           </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center gap-3">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-3">
             <Film className="w-7 h-7 text-rose-500" />
             Select Date & Showtime
           </h2>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
             Pick a convenient showtime below to open the interactive seat map and reserve your seats.
           </p>
         </div>
