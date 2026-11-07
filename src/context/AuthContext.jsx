@@ -110,6 +110,14 @@ export const AuthProvider = ({ children }) => {
     setIsRegisterOpen(false);
   };
 
+  const updateUser = useCallback((updatedData) => {
+    setUser((prev) => {
+      const merged = { ...prev, ...updatedData };
+      localStorage.setItem('cinepass_user', JSON.stringify(merged));
+      return merged;
+    });
+  }, []);
+
   return (
     <AuthContext.Provider
       value={{
@@ -122,6 +130,7 @@ export const AuthProvider = ({ children }) => {
         login,
         register,
         logout,
+        updateUser,
         isLoginOpen,
         isRegisterOpen,
         openLogin,

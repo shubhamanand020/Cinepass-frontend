@@ -16,6 +16,21 @@ export const authApi = {
     return response.data;
   },
 
+  getMyProfile: async () => {
+    const response = await apiClient.get('/api/users/profile');
+    return response.data;
+  },
+
+  updateMyProfile: async (profileData) => {
+    const response = await apiClient.put('/api/users/profile', profileData);
+    return response.data;
+  },
+
+  changePassword: async (passwordData) => {
+    const response = await apiClient.put('/api/users/profile/change-password', passwordData);
+    return response.data;
+  },
+
   getAllUsers: async () => {
     const response = await apiClient.get('/api/users');
     return response.data;

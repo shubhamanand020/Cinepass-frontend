@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Clapperboard, Ticket, LogOut, Menu, X, Shield } from 'lucide-react';
+import { Clapperboard, Ticket, LogOut, Menu, X, Shield, User } from 'lucide-react';
 
 export const Navbar = () => {
   const { user, isAdmin, isAuthenticated, logout, openLogin, openRegister } = useAuth();
@@ -134,6 +134,15 @@ export const Navbar = () => {
                       My Tickets & History
                     </Link>
 
+                    <Link
+                      to="/profile"
+                      onClick={() => setUserDropdownOpen(false)}
+                      className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors"
+                    >
+                      <User className="w-4 h-4 text-blue-400" />
+                      Account Profile
+                    </Link>
+
                     <div className="border-t border-slate-800/80 my-1"></div>
 
                     <button
@@ -200,6 +209,15 @@ export const Navbar = () => {
             }`}
           >
             My Bookings
+          </Link>
+          <Link
+            to="/profile"
+            onClick={() => setMobileMenuOpen(false)}
+            className={`block px-3 py-2.5 rounded-xl text-sm font-medium ${
+              isActive('/profile') ? 'text-rose-400 bg-rose-500/10' : 'text-slate-300'
+            }`}
+          >
+            My Profile
           </Link>
 
           {isAdmin && (

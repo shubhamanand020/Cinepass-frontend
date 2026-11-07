@@ -14,6 +14,7 @@ import { HomePage } from './pages/HomePage';
 import { MovieDetailPage } from './pages/MovieDetailPage';
 import { SeatBookingPage } from './pages/SeatBookingPage';
 import { MyBookingsPage } from './pages/MyBookingsPage';
+import { ProfilePage } from './pages/ProfilePage';
 import { AdminDashboardPage } from './pages/AdminDashboardPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 
@@ -35,6 +36,14 @@ export function App() {
                   element={
                     <ProtectedRoute>
                       <MyBookingsPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/profile"
+                  element={
+                    <ProtectedRoute>
+                      <ProfilePage />
                     </ProtectedRoute>
                   }
                 />
