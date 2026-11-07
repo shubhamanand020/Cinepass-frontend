@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
-import { Clapperboard, Ticket, LogOut, Menu, X, Shield, User, Sun, Moon } from 'lucide-react';
+import { Clapperboard, Ticket, LogOut, Menu, X, Shield, User, Sun, Moon, Search } from 'lucide-react';
+import { MovieSearchModal } from '../movies/MovieSearchModal';
+import { TrailerModal } from '../movies/TrailerModal';
 
 export const Navbar = () => {
   const { user, isAdmin, isAuthenticated, logout, openLogin, openRegister } = useAuth();
@@ -10,8 +12,22 @@ export const Navbar = () => {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const [searchModalOpen, setSearchModalOpen] = useState(false);
+  const [trailerMovie, setTrailerMovie] = useState(null);
 
   const isActive = (path) => location.pathname === path;
+
+  // Keyboard shortcut Ctrl+K / Cmd+K to launch search
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        setSearchModalOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   return (
     <nav className="sticky top-0 z-40 w-full bg-white/85 dark:bg-slate-950/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800/80 transition-colors duration-200">
@@ -73,8 +89,21 @@ export const Navbar = () => {
             </div>
           </div>
 
-          {/* Right Action: Theme Switcher & Auth */}
+          {/* Right Action: Search, Theme Switcher & Auth */}
           <div className="hidden md:flex items-center gap-3">
+            {/* Quick Search Trigger */}
+            <button
+              onClick={() => setSearchModalOpen(true)}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 border border-slate-200 dark:border-slate-800 text-xs transition-colors"
+              title="Quick Search (Ctrl+K)"
+            >
+              <Search className="w-3.5 h-3.5 text-rose-500" />
+              <span className="hidden lg:inline">Search movies...</span>
+              <kbd className="hidden lg:inline text-[10px] font-mono font-semibold bg-white dark:bg-slate-800 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-700 text-slate-400">
+                Ctrl K
+              </kbd>
+            </button>
+
             {/* Theme Toggle Button */}
             <button
               onClick={toggleTheme}
@@ -192,8 +221,15 @@ export const Navbar = () => {
             )}
           </div>
 
-          {/* Mobile Right Controls: Theme Toggle + Menu Button */}
+          {/* Mobile Right Controls: Search + Theme Toggle + Menu Button */}
           <div className="md:hidden flex items-center gap-2">
+            <button
+              onClick={() => setSearchModalOpen(true)}
+              aria-label="Search movies"
+              className="p-2 rounded-xl text-slate-500 hover:text-slate-900 bg-slate-100 dark:text-slate-400 dark:hover:text-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 transition-colors"
+            >
+              <Search className="w-5 h-5 text-rose-500" />
+            </button>
             <button
               onClick={toggleTheme}
               aria-label={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
@@ -300,6 +336,20 @@ export const Navbar = () => {
           </div>
         </div>
       )}
+
+      {/* Movie Quick-Search Modal */}
+      <MovieSearchModal
+        isOpen={searchModalOpen}
+        onClose={() => setSearchModalOpen(false)}
+        onSelectTrailer={(movie) => setTrailerMovie(movie)}
+      />
+
+      {/* Trailer Modal (triggered from search or navbar) */}
+      <TrailerModal
+        movie={trailerMovie}
+        isOpen={!!trailerMovie}
+        onClose={() => setTrailerMovie(null)}
+      />
     </nav>
   );
 };

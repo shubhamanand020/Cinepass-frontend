@@ -21,7 +21,8 @@ export const AdminMoviesTab = ({
     language: '',
     duration: '',
     releaseDate: '',
-    posterUrl: ''
+    posterUrl: '',
+    trailerUrl: ''
   });
   const [formErrors, setFormErrors] = useState({});
 
@@ -40,7 +41,8 @@ export const AdminMoviesTab = ({
       language: '',
       duration: '',
       releaseDate: '',
-      posterUrl: ''
+      posterUrl: '',
+      trailerUrl: ''
     });
     setFormErrors({});
     setModalOpen(true);
@@ -55,7 +57,8 @@ export const AdminMoviesTab = ({
       language: movie.language || '',
       duration: movie.duration || '',
       releaseDate: movie.releaseDate || '',
-      posterUrl: movie.posterUrl || ''
+      posterUrl: movie.posterUrl || '',
+      trailerUrl: movie.trailerUrl || ''
     });
     setFormErrors({});
     setModalOpen(true);
@@ -317,6 +320,20 @@ export const AdminMoviesTab = ({
               value={formData.posterUrl}
               onChange={(e) => setFormData({ ...formData, posterUrl: e.target.value })}
               placeholder="https://image-url.com/poster.jpg"
+              className="w-full px-3.5 py-2 bg-slate-900 border border-slate-800 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-rose-500"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center justify-between">
+              <span>YouTube Trailer URL</span>
+              <span className="text-[10px] text-slate-500 lowercase">https://youtube.com/watch?v=...</span>
+            </label>
+            <input
+              type="url"
+              value={formData.trailerUrl}
+              onChange={(e) => setFormData({ ...formData, trailerUrl: e.target.value })}
+              placeholder="e.g. https://www.youtube.com/watch?v=zSWdZVtXT7E"
               className="w-full px-3.5 py-2 bg-slate-900 border border-slate-800 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-rose-500"
             />
           </div>

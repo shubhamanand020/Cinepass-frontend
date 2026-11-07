@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Clock, Calendar, Ticket, Star } from 'lucide-react';
+import { Clock, Calendar, Ticket, Star, Play } from 'lucide-react';
 
 const FALLBACK_POSTER =
   'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=600';
 
-export const MovieCard = ({ movie }) => {
+export const MovieCard = ({ movie, onWatchTrailer }) => {
   return (
     <div className="group flex flex-col rounded-2xl overflow-hidden bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800/90 hover:border-rose-500/50 hover:bg-slate-50/80 dark:hover:bg-slate-900 transition-all duration-300 hover:shadow-2xl hover:shadow-rose-600/15 hover:-translate-y-1.5 flex-1 shadow-sm">
       {/* Poster Image Container */}
@@ -34,10 +34,25 @@ export const MovieCard = ({ movie }) => {
         </div>
 
         {/* Hover Quick Action */}
-        <div className="absolute inset-0 flex items-end p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-slate-950/40 backdrop-blur-[2px]">
+        <div className="absolute inset-0 flex items-end gap-2 p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-slate-950/50 backdrop-blur-[2px]">
+          {onWatchTrailer && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onWatchTrailer(movie);
+              }}
+              title="Watch Official Trailer"
+              className="p-2.5 rounded-xl text-white bg-slate-900/90 hover:bg-rose-600 border border-slate-700/80 transition-all shadow-lg active:scale-95"
+              aria-label={`Watch ${movie.title} trailer`}
+            >
+              <Play className="w-4 h-4 fill-current" />
+            </button>
+          )}
           <Link
             to={`/movie/${movie.id}`}
-            className="w-full py-2.5 px-4 rounded-xl text-xs font-bold text-white bg-rose-600 hover:bg-rose-500 flex items-center justify-center gap-2 shadow-lg shadow-rose-600/40 active:scale-95 transition-all"
+            className="flex-1 py-2.5 px-3 rounded-xl text-xs font-bold text-white bg-rose-600 hover:bg-rose-500 flex items-center justify-center gap-1.5 shadow-lg shadow-rose-600/40 active:scale-95 transition-all"
           >
             <Ticket className="w-4 h-4" />
             Book Tickets
