@@ -408,6 +408,7 @@ export const AdminDashboardPage = () => {
               screensMap={screensMap}
               usersMap={usersMap}
               onAdminCancelBooking={handleAdminCancelBooking}
+              onRefresh={fetchAllData}
               isLoading={actionLoading}
             />
           )}

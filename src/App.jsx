@@ -14,9 +14,10 @@ import { HomePage } from './pages/HomePage';
 import { MovieDetailPage } from './pages/MovieDetailPage';
 import { SeatBookingPage } from './pages/SeatBookingPage';
 import { MyBookingsPage } from './pages/MyBookingsPage';
-import { ProfilePage } from './pages/ProfilePage';
-import { AdminDashboardPage } from './pages/AdminDashboardPage';
 import { NotFoundPage } from './pages/NotFoundPage';
+
+const ProfilePage = React.lazy(() => import('./pages/ProfilePage'));
+const AdminDashboardPage = React.lazy(() => import('./pages/AdminDashboardPage'));
 
 export function App() {
   return (
@@ -27,36 +28,38 @@ export function App() {
             <Navbar />
 
             <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-8">
-              <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/movie/:id" element={<MovieDetailPage />} />
-                <Route path="/booking/:showId" element={<SeatBookingPage />} />
-                <Route
-                  path="/my-bookings"
-                  element={
-                    <ProtectedRoute>
-                      <MyBookingsPage />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/profile"
-                  element={
-                    <ProtectedRoute>
-                      <ProfilePage />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/dashboard"
-                  element={
-                    <AdminRoute>
-                      <AdminDashboardPage />
-                    </AdminRoute>
-                  }
-                />
-                <Route path="*" element={<NotFoundPage />} />
-              </Routes>
+              <React.Suspense fallback={<div className="h-96 flex items-center justify-center text-xs text-slate-500 animate-pulse">Loading Cinepass...</div>}>
+                <Routes>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/movie/:id" element={<MovieDetailPage />} />
+                  <Route path="/booking/:showId" element={<SeatBookingPage />} />
+                  <Route
+                    path="/my-bookings"
+                    element={
+                      <ProtectedRoute>
+                        <MyBookingsPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/profile"
+                    element={
+                      <ProtectedRoute>
+                        <ProfilePage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/dashboard"
+                    element={
+                      <AdminRoute>
+                        <AdminDashboardPage />
+                      </AdminRoute>
+                    }
+                  />
+                  <Route path="*" element={<NotFoundPage />} />
+                </Routes>
+              </React.Suspense>
             </main>
 
             <Footer />
