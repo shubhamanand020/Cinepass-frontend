@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local Automation & Scripts
+*.ps1
+*.ps
+

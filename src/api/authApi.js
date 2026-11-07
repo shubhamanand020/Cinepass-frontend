@@ -15,5 +15,10 @@ export const authApi = {
     const response = await apiClient.get(`/api/users/${userId}`);
     return response.data;
   },
+
+  getAllUsers: async () => {
+    const response = await apiClient.get('/api/users');
+    return response.data;
+  },
 };
 

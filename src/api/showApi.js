@@ -31,4 +31,34 @@ export const showApi = {
     const response = await apiClient.get(`/api/screens/${screenId}`);
     return response.data;
   },
+
+  createScreen: async (screenData) => {
+    const response = await apiClient.post('/api/screens', screenData);
+    return response.data;
+  },
+
+  updateScreen: async (screenId, screenData) => {
+    const response = await apiClient.put(`/api/screens/${screenId}`, screenData);
+    return response.data;
+  },
+
+  deleteScreen: async (screenId) => {
+    const response = await apiClient.delete(`/api/screens/${screenId}`);
+    return response.data;
+  },
+
+  createShow: async (showData) => {
+    const response = await apiClient.post('/api/shows', showData);
+    return response.data;
+  },
+
+  updateShow: async (showId, showData) => {
+    const response = await apiClient.put(`/api/shows/${showId}`, showData);
+    return response.data;
+  },
+
+  deleteShow: async (showId) => {
+    const response = await apiClient.delete(`/api/shows/${showId}`);
+    return response.data;
+  },
 };

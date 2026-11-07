@@ -28,5 +28,15 @@ export const bookingApi = {
     const response = await apiClient.get(`/api/bookings/${bookingId}`);
     return response.data;
   },
+
+  getAllBookingsAdmin: async () => {
+    const response = await apiClient.get('/api/bookings/admin/all');
+    return response.data;
+  },
+
+  adminCancelBooking: async (bookingId) => {
+    const response = await apiClient.post(`/api/bookings/admin/${bookingId}/cancel`);
+    return response.data;
+  },
 };
 

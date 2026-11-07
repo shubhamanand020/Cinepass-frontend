@@ -8,11 +8,13 @@ import { Footer } from './components/common/Footer';
 import { LoginModal } from './components/auth/LoginModal';
 import { RegisterModal } from './components/auth/RegisterModal';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
+import { AdminRoute } from './components/common/AdminRoute';
 
 import { HomePage } from './pages/HomePage';
 import { MovieDetailPage } from './pages/MovieDetailPage';
 import { SeatBookingPage } from './pages/SeatBookingPage';
 import { MyBookingsPage } from './pages/MyBookingsPage';
+import { AdminDashboardPage } from './pages/AdminDashboardPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 
 export function App() {
@@ -34,6 +36,14 @@ export function App() {
                     <ProtectedRoute>
                       <MyBookingsPage />
                     </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/dashboard"
+                  element={
+                    <AdminRoute>
+                      <AdminDashboardPage />
+                    </AdminRoute>
                   }
                 />
                 <Route path="*" element={<NotFoundPage />} />
