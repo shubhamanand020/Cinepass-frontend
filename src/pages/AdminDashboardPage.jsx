@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { 
   Shield, LayoutDashboard, Film, Tv, Calendar, Ticket, RefreshCw, AlertCircle 
 } from 'lucide-react';
@@ -15,8 +16,39 @@ import { AdminShowsTab } from '../components/admin/AdminShowsTab';
 import { AdminBookingsTab } from '../components/admin/AdminBookingsTab';
 
 export const AdminDashboardPage = () => {
-  const { showToast } = useToast();
-  const [activeTab, setActiveTab] = useState('overview');
+  const toast = useToast();
+  const showToast = useCallback((msg, type = 'info') => {
+    if (toast?.showToast) {
+      toast.showToast(msg, type);
+    } else if (type === 'success' && toast?.success) {
+      toast.success(msg);
+    } else if (type === 'error' && toast?.error) {
+      toast.error(msg);
+    } else if (type === 'warning' && toast?.warning) {
+      toast.warning(msg);
+    } else if (toast?.info) {
+      toast.info(msg);
+    }
+  }, [toast]);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tabParam = searchParams.get('tab');
+  const [activeTab, setActiveTab] = useState(() => {
+    return ['overview', 'movies', 'screens', 'shows', 'bookings'].includes(tabParam)
+      ? tabParam
+      : 'overview';
+  });
+
+  useEffect(() => {
+    if (tabParam && ['overview', 'movies', 'screens', 'shows', 'bookings'].includes(tabParam)) {
+      setActiveTab(tabParam);
+    }
+  }, [tabParam]);
+
+  const handleTabChange = useCallback((tabId) => {
+    setActiveTab(tabId);
+    setSearchParams({ tab: tabId }, { replace: true });
+  }, [setSearchParams]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -142,7 +174,7 @@ export const AdminDashboardPage = () => {
         showToast('New movie added to catalog!', 'success');
       }
       const updatedMovies = await movieApi.getMovies();
-      setMovies(updatedMovies);
+      setMovies(Array.isArray(updatedMovies) ? updatedMovies : []);
       return true;
     } catch (err) {
       console.error('Error saving movie:', err);
@@ -158,7 +190,8 @@ export const AdminDashboardPage = () => {
       setActionLoading(true);
       await movieApi.deleteMovie(id);
       showToast('Movie deleted from catalog', 'success');
-      setMovies((prev) => prev.filter((m) => m.id !== id));
+      const updatedMovies = await movieApi.getMovies();
+      setMovies(Array.isArray(updatedMovies) ? updatedMovies : []);
       return true;
     } catch (err) {
       console.error('Error deleting movie:', err);
@@ -181,7 +214,7 @@ export const AdminDashboardPage = () => {
         showToast('New screen layout created!', 'success');
       }
       const updatedScreens = await showApi.getScreens();
-      setScreens(updatedScreens);
+      setScreens(Array.isArray(updatedScreens) ? updatedScreens : []);
       return true;
     } catch (err) {
       console.error('Error saving screen:', err);
@@ -197,7 +230,8 @@ export const AdminDashboardPage = () => {
       setActionLoading(true);
       await showApi.deleteScreen(id);
       showToast('Cinema screen deleted', 'success');
-      setScreens((prev) => prev.filter((s) => s.id !== id));
+      const updatedScreens = await showApi.getScreens();
+      setScreens(Array.isArray(updatedScreens) ? updatedScreens : []);
       return true;
     } catch (err) {
       console.error('Error deleting screen:', err);
@@ -220,7 +254,7 @@ export const AdminDashboardPage = () => {
         showToast('New showtime scheduled!', 'success');
       }
       const updatedShows = await showApi.getShows();
-      setShows(updatedShows);
+      setShows(Array.isArray(updatedShows) ? updatedShows : []);
       return true;
     } catch (err) {
       console.error('Error saving show:', err);
@@ -236,7 +270,8 @@ export const AdminDashboardPage = () => {
       setActionLoading(true);
       await showApi.deleteShow(id);
       showToast('Showtime deleted', 'success');
-      setShows((prev) => prev.filter((s) => s.id !== id));
+      const updatedShows = await showApi.getShows();
+      setShows(Array.isArray(updatedShows) ? updatedShows : []);
       return true;
     } catch (err) {
       console.error('Error deleting show:', err);
@@ -254,7 +289,7 @@ export const AdminDashboardPage = () => {
       await bookingApi.adminCancelBooking(id);
       showToast(`Booking #${id} has been cancelled by Admin`, 'success');
       const updatedBookings = await bookingApi.getAllBookingsAdmin();
-      setBookings(updatedBookings);
+      setBookings(Array.isArray(updatedBookings) ? updatedBookings : []);
       return true;
     } catch (err) {
       console.error('Error cancelling booking:', err);
@@ -265,13 +300,13 @@ export const AdminDashboardPage = () => {
     }
   };
 
-  const navItems = [
+  const navItems = useMemo(() => [
     { id: 'overview', label: 'Overview', icon: LayoutDashboard, count: null },
     { id: 'movies', label: 'Movies', icon: Film, count: movies.length },
     { id: 'screens', label: 'Screens & Layouts', icon: Tv, count: screens.length },
     { id: 'shows', label: 'Show Scheduler', icon: Calendar, count: shows.length },
     { id: 'bookings', label: 'Bookings Audit', icon: Ticket, count: bookings.length }
-  ];
+  ], [movies.length, screens.length, shows.length, bookings.length]);
 
   return (
     <div className="pb-16 space-y-8 animate-fadeIn">
@@ -315,7 +350,7 @@ export const AdminDashboardPage = () => {
           return (
             <button
               key={item.id}
-              onClick={() => setActiveTab(item.id)}
+              onClick={() => handleTabChange(item.id)}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all whitespace-nowrap ${
                 isActive
                   ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/20 font-bold'
@@ -365,7 +400,7 @@ export const AdminDashboardPage = () => {
               recentBookings={bookings}
               moviesMap={moviesMap}
               showsMap={showsMap}
-              onNavigateTab={(tab) => setActiveTab(tab)}
+              onNavigateTab={(tab) => handleTabChange(tab)}
             />
           )}
 

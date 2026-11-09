@@ -17,7 +17,20 @@ export const AdminBookingsTab = ({
   onRefresh, 
   isLoading 
 }) => {
-  const { showToast } = useToast();
+  const toast = useToast();
+  const showToast = (msg, type = 'info') => {
+    if (toast.showToast) {
+      toast.showToast(msg, type);
+    } else if (type === 'success' && toast.success) {
+      toast.success(msg);
+    } else if (type === 'error' && toast.error) {
+      toast.error(msg);
+    } else if (type === 'warning' && toast.warning) {
+      toast.warning(msg);
+    } else if (toast.info) {
+      toast.info(msg);
+    }
+  };
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [selectedBooking, setSelectedBooking] = useState(null);
@@ -114,6 +127,8 @@ export const AdminBookingsTab = ({
       setVerifyResult(result);
       if (result.valid) {
         showToast(result.message || 'Ticket verified successfully!', 'success');
+      } else if (result.alreadyCheckedIn) {
+        showToast(result.message || 'Warning: Ticket was already checked in', 'warning');
       } else {
         showToast(result.message || 'Invalid ticket pass', 'error');
       }
@@ -121,7 +136,7 @@ export const AdminBookingsTab = ({
     } catch (err) {
       console.error('Error verifying ticket:', err);
       const msg = err.response?.data?.message || 'Verification failed. Token not found or invalid.';
-      setVerifyResult({ valid: false, message: msg });
+      setVerifyResult({ valid: false, alreadyCheckedIn: false, message: msg });
       showToast(msg, 'error');
     } finally {
       setVerifying(false);
@@ -419,16 +434,37 @@ export const AdminBookingsTab = ({
             <div className={`p-4 rounded-2xl border space-y-3 animate-fadeIn ${
               verifyResult.valid 
                 ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300' 
+                : verifyResult.alreadyCheckedIn
+                ? 'bg-amber-500/10 border-amber-500/30 text-amber-300'
                 : 'bg-rose-500/10 border-rose-500/30 text-rose-300'
             }`}>
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
-                  {verifyResult.valid ? <CheckCircle2 className="w-4 h-4 text-emerald-400" /> : <AlertTriangle className="w-4 h-4 text-rose-400" />}
-                  {verifyResult.valid ? 'Valid Admission Pass' : 'Invalid Ticket'}
+                  {verifyResult.valid ? (
+                    <>
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                      <span>Valid Admission Pass • Check-in OK</span>
+                    </>
+                  ) : verifyResult.alreadyCheckedIn ? (
+                    <>
+                      <Clock className="w-4 h-4 text-amber-400" />
+                      <span>Already Checked In (Used Pass)</span>
+                    </>
+                  ) : (
+                    <>
+                      <AlertTriangle className="w-4 h-4 text-rose-400" />
+                      <span>Invalid Ticket</span>
+                    </>
+                  )}
                 </span>
                 {verifyResult.checkedInAt && (
-                  <span className="text-[10px] font-mono bg-emerald-500/20 px-2 py-0.5 rounded text-emerald-300">
-                    Checked In: {new Date(verifyResult.checkedInAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  <span className={`text-[10px] font-mono px-2 py-0.5 rounded ${
+                    verifyResult.valid 
+                      ? 'bg-emerald-500/20 text-emerald-300' 
+                      : 'bg-amber-500/20 text-amber-300'
+                  }`}>
+                    {verifyResult.alreadyCheckedIn ? 'Prior Check-In: ' : 'Checked In: '}
+                    {new Date(verifyResult.checkedInAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </span>
                 )}
               </div>
@@ -437,8 +473,8 @@ export const AdminBookingsTab = ({
                 {verifyResult.message}
               </p>
 
-              {verifyResult.valid && (
-                <div className="pt-2 border-t border-emerald-500/20 grid grid-cols-2 gap-2 text-xs text-slate-300">
+              {(verifyResult.valid || verifyResult.alreadyCheckedIn) && (
+                <div className="pt-2 border-t border-slate-700/50 grid grid-cols-2 gap-2 text-xs text-slate-300">
                   <div>
                     <span className="text-[10px] text-slate-400 block uppercase">Movie</span>
                     <span className="font-bold text-white">{verifyResult.movieTitle}</span>
@@ -446,6 +482,12 @@ export const AdminBookingsTab = ({
                   <div>
                     <span className="text-[10px] text-slate-400 block uppercase">Screen</span>
                     <span className="font-medium text-slate-200">{verifyResult.theatreName} • {verifyResult.screenName}</span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-slate-400 block uppercase">Showtime</span>
+                    <span className="font-medium text-slate-200">
+                      {verifyResult.showTime ? new Date(verifyResult.showTime).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) : 'N/A'}
+                    </span>
                   </div>
                   <div>
                     <span className="text-[10px] text-slate-400 block uppercase">Seats</span>
