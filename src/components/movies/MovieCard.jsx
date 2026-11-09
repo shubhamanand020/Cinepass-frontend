@@ -1,11 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Clock, Calendar, Ticket, Star, Play } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
+import { Clock, Calendar, Ticket, Star, Play, Film } from 'lucide-react';
 
 const FALLBACK_POSTER =
   'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=600';
 
 export const MovieCard = ({ movie, onWatchTrailer }) => {
+  const { isAdmin } = useAuth();
   return (
     <div className="group flex flex-col rounded-2xl overflow-hidden bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800/90 hover:border-rose-500/50 hover:bg-slate-50/80 dark:hover:bg-slate-900 transition-all duration-300 hover:shadow-2xl hover:shadow-rose-600/15 hover:-translate-y-1.5 flex-1 shadow-sm">
       {/* Poster Image Container */}
@@ -52,10 +54,23 @@ export const MovieCard = ({ movie, onWatchTrailer }) => {
           )}
           <Link
             to={`/movie/${movie.id}`}
-            className="flex-1 py-2.5 px-3 rounded-xl text-xs font-bold text-white bg-rose-600 hover:bg-rose-500 flex items-center justify-center gap-1.5 shadow-lg shadow-rose-600/40 active:scale-95 transition-all"
+            className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-bold text-white flex items-center justify-center gap-1.5 shadow-lg active:scale-95 transition-all ${
+              isAdmin
+                ? 'bg-amber-600 hover:bg-amber-500 shadow-amber-600/40'
+                : 'bg-rose-600 hover:bg-rose-500 shadow-rose-600/40'
+            }`}
           >
-            <Ticket className="w-4 h-4" />
-            Book Tickets
+            {isAdmin ? (
+              <>
+                <Film className="w-4 h-4" />
+                View & Manage
+              </>
+            ) : (
+              <>
+                <Ticket className="w-4 h-4" />
+                Book Tickets
+              </>
+            )}
           </Link>
         </div>
       </div>

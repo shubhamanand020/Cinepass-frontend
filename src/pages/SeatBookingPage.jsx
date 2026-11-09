@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { showApi } from '../api/showApi';
 import { movieApi } from '../api/movieApi';
 import { bookingApi } from '../api/bookingApi';
@@ -17,12 +17,21 @@ import {
   Armchair,
   AlertCircle,
   Film,
+  Shield,
 } from 'lucide-react';
 
 export const SeatBookingPage = () => {
   const { showId } = useParams();
-  const { isAuthenticated, openLogin } = useAuth();
+  const navigate = useNavigate();
+  const { isAuthenticated, isAdmin, openLogin } = useAuth();
   const { success, error: toastError, warning, info } = useToast();
+
+  useEffect(() => {
+    if (isAdmin) {
+      warning('Administrators cannot reserve customer seats. Redirecting to Admin Console.');
+      navigate('/admin/dashboard', { replace: true });
+    }
+  }, [isAdmin, navigate, warning]);
 
   const [show, setShow] = useState(null);
   const [movie, setMovie] = useState(null);
@@ -193,6 +202,24 @@ export const SeatBookingPage = () => {
       setActionLoading(false);
     }
   };
+
+  if (isAdmin) {
+    return (
+      <div className="py-24 text-center space-y-4">
+        <Shield className="w-12 h-12 text-amber-500 mx-auto" />
+        <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">Administrator Access Restricted</h2>
+        <p className="text-sm text-slate-600 dark:text-slate-400 max-w-md mx-auto">
+          Customer seat reservations are restricted for ROLE_ADMIN. You can manage cinema showtimes and review booking audits in the Admin Console.
+        </p>
+        <Link
+          to="/admin/dashboard"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-amber-600 hover:bg-amber-500 transition-colors shadow-lg shadow-amber-600/20"
+        >
+          Open Admin Operations Console
+        </Link>
+      </div>
+    );
+  }
 
   if (loading) {
     return (

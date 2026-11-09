@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Sparkles, Calendar, Clock, Ticket, ChevronLeft, ChevronRight, Play } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
+import { Sparkles, Calendar, Clock, Ticket, ChevronLeft, ChevronRight, Play, Shield } from 'lucide-react';
 
 export const HeroBanner = ({ movies = [], onWatchTrailer }) => {
+  const { isAdmin } = useAuth();
   const [currentIndex, setCurrentIndex] = useState(0);
 
   // Take up to 5 featured movies for the carousel
@@ -108,13 +110,23 @@ export const HeroBanner = ({ movies = [], onWatchTrailer }) => {
           </div>
 
           <div className="flex flex-wrap items-center gap-3 pt-2">
-            <Link
-              to={`/movie/${currentMovie.id}`}
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-500 hover:to-rose-600 active:scale-95 transition-all shadow-lg shadow-rose-600/30"
-            >
-              <Ticket className="w-4 h-4" />
-              Book Tickets Now
-            </Link>
+            {isAdmin ? (
+              <Link
+                to="/admin/dashboard?tab=shows"
+                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 active:scale-95 transition-all shadow-lg shadow-amber-600/30"
+              >
+                <Shield className="w-4 h-4" />
+                Manage Shows (Admin)
+              </Link>
+            ) : (
+              <Link
+                to={`/movie/${currentMovie.id}`}
+                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-500 hover:to-rose-600 active:scale-95 transition-all shadow-lg shadow-rose-600/30"
+              >
+                <Ticket className="w-4 h-4" />
+                Book Tickets Now
+              </Link>
+            )}
             {onWatchTrailer && (
               <button
                 onClick={() => onWatchTrailer(currentMovie)}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import { movieApi } from '../api/movieApi';
 import { showApi } from '../api/showApi';
 import { ShowtimeSelector } from '../components/movies/ShowtimeSelector';
@@ -14,6 +15,7 @@ import {
   Sparkles,
   AlertCircle,
   Film,
+  Shield,
 } from 'lucide-react';
 
 const FALLBACK_POSTER =
@@ -21,6 +23,7 @@ const FALLBACK_POSTER =
 
 export const MovieDetailPage = () => {
   const { id } = useParams();
+  const { isAdmin } = useAuth();
   const [movie, setMovie] = useState(null);
   const [shows, setShows] = useState([]);
   const [screens, setScreens] = useState([]);
@@ -224,13 +227,23 @@ export const MovieDetailPage = () => {
             </div>
 
             <div className="pt-4 flex flex-wrap items-center gap-4">
-              <a
-                href="#showtimes-section"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-500 hover:to-rose-600 active:scale-95 transition-all shadow-lg shadow-rose-600/30"
-              >
-                <Ticket className="w-4 h-4" />
-                Select Showtime & Book Seats
-              </a>
+              {isAdmin ? (
+                <Link
+                  to="/admin/dashboard?tab=shows"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 active:scale-95 transition-all shadow-lg shadow-amber-600/30"
+                >
+                  <Shield className="w-4 h-4" />
+                  Manage Showtimes in Admin Console
+                </Link>
+              ) : (
+                <a
+                  href="#showtimes-section"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-500 hover:to-rose-600 active:scale-95 transition-all shadow-lg shadow-rose-600/30"
+                >
+                  <Ticket className="w-4 h-4" />
+                  Select Showtime & Book Seats
+                </a>
+              )}
 
               <button
                 onClick={() => setIsTrailerOpen(true)}
@@ -253,15 +266,61 @@ export const MovieDetailPage = () => {
           </div>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-3">
             <Film className="w-7 h-7 text-rose-500" />
-            Select Date & Showtime
+            {isAdmin ? 'Movie Showtimes (Admin Overview)' : 'Select Date & Showtime'}
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
-            Pick a convenient showtime below to open the interactive seat map and reserve your seats.
+            {isAdmin
+              ? 'Below are the currently scheduled showtimes for this film. To schedule additional shows or adjust pricing, use the Admin Console.'
+              : 'Pick a convenient showtime below to open the interactive seat map and reserve your seats.'}
           </p>
         </div>
 
-        {/* Dynamic Showtime Selector with Date & Screen Grouping */}
-        <ShowtimeSelector shows={shows} screens={screens} />
+        {isAdmin ? (
+          <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 text-slate-200 space-y-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <span className="font-bold text-amber-400 text-sm flex items-center gap-2">
+                  <Shield className="w-4 h-4 text-amber-400" />
+                  Administrator Mode Active
+                </span>
+                <p className="text-xs text-slate-400 mt-1">
+                  Customer seat reservation is separated from administrative accounts. You have {shows.length} showtime(s) scheduled for this film.
+                </p>
+              </div>
+              <Link
+                to="/admin/dashboard?tab=shows"
+                className="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs transition-colors shrink-0 shadow-lg shadow-amber-600/20"
+              >
+                Open Show Scheduler
+              </Link>
+            </div>
+
+            {shows.length > 0 && (
+              <div className="pt-3 border-t border-slate-800/80">
+                <p className="text-xs font-semibold text-slate-400 mb-2">Configured Showtimes:</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                  {shows.map((s) => {
+                    const screen = screens.find((sc) => sc.id === s.screenId);
+                    return (
+                      <div key={s.id} className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 text-xs space-y-1">
+                        <div className="flex items-center justify-between font-mono text-[11px] text-amber-400">
+                          <span>Show #{s.id}</span>
+                          <span>₹{s.basePrice} / ₹{s.premiumPrice}</span>
+                        </div>
+                        <p className="font-medium text-white">{screen ? `${screen.name} (${screen.theatreName})` : `Screen #${s.screenId}`}</p>
+                        <p className="text-slate-400 text-[11px]">
+                          {s.showTime ? new Date(s.showTime).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) : 'Time Pending'}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+        ) : (
+          <ShowtimeSelector shows={shows} screens={screens} />
+        )}
       </section>
 
       {/* Trailer Modal */}

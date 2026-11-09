@@ -51,40 +51,54 @@ export const Navbar = () => {
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-1">
-              <Link
-                to="/"
-                className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  isActive('/')
-                    ? 'text-rose-600 dark:text-rose-400 bg-rose-500/10'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-900'
-                }`}
-              >
-                Movies
-              </Link>
-              <Link
-                to="/my-bookings"
-                className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 ${
-                  isActive('/my-bookings')
-                    ? 'text-rose-600 dark:text-rose-400 bg-rose-500/10'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-900'
-                }`}
-              >
-                <Ticket className="w-4 h-4" />
-                My Bookings
-              </Link>
-
-              {isAdmin && (
-                <Link
-                  to="/admin/dashboard"
-                  className={`px-3.5 py-2 rounded-lg text-sm font-bold transition-colors flex items-center gap-1.5 ${
-                    isActive('/admin/dashboard')
-                      ? 'text-amber-600 dark:text-amber-400 bg-amber-500/15 border border-amber-500/30'
-                      : 'text-amber-600/90 dark:text-amber-400/90 hover:text-amber-700 dark:hover:text-amber-300 hover:bg-amber-500/10'
-                  }`}
-                >
-                  <Shield className="w-4 h-4 text-amber-500 dark:text-amber-400" />
-                  Admin Console
-                </Link>
+              {isAdmin ? (
+                <>
+                  <Link
+                    to="/admin/dashboard"
+                    className={`px-3.5 py-2 rounded-lg text-sm font-bold transition-colors flex items-center gap-1.5 ${
+                      isActive('/admin/dashboard')
+                        ? 'text-amber-600 dark:text-amber-400 bg-amber-500/15 border border-amber-500/30'
+                        : 'text-amber-600/90 dark:text-amber-400/90 hover:text-amber-700 dark:hover:text-amber-300 hover:bg-amber-500/10'
+                    }`}
+                  >
+                    <Shield className="w-4 h-4 text-amber-500 dark:text-amber-400" />
+                    Admin Operations Console
+                  </Link>
+                  <Link
+                    to="/"
+                    className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      isActive('/')
+                        ? 'text-rose-600 dark:text-rose-400 bg-rose-500/10'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-900'
+                    }`}
+                  >
+                    Catalog Overview
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link
+                    to="/"
+                    className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      isActive('/')
+                        ? 'text-rose-600 dark:text-rose-400 bg-rose-500/10'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-900'
+                    }`}
+                  >
+                    Movies
+                  </Link>
+                  <Link
+                    to="/my-bookings"
+                    className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 ${
+                      isActive('/my-bookings')
+                        ? 'text-rose-600 dark:text-rose-400 bg-rose-500/10'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-900'
+                    }`}
+                  >
+                    <Ticket className="w-4 h-4" />
+                    My Bookings
+                  </Link>
+                </>
               )}
             </div>
           </div>
@@ -159,25 +173,25 @@ export const Navbar = () => {
                       )}
                     </div>
 
-                    {isAdmin && (
+                    {isAdmin ? (
                       <Link
                         to="/admin/dashboard"
                         onClick={() => setUserDropdownOpen(false)}
-                        className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-amber-600 dark:text-amber-300 hover:text-amber-800 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors"
+                        className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-amber-600 dark:text-amber-300 hover:text-amber-800 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors font-semibold"
                       >
                         <Shield className="w-4 h-4 text-amber-500 dark:text-amber-400" />
                         Admin Dashboard
                       </Link>
+                    ) : (
+                      <Link
+                        to="/my-bookings"
+                        onClick={() => setUserDropdownOpen(false)}
+                        className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors"
+                      >
+                        <Ticket className="w-4 h-4 text-rose-500 dark:text-rose-400" />
+                        My Tickets & History
+                      </Link>
                     )}
-
-                    <Link
-                      to="/my-bookings"
-                      onClick={() => setUserDropdownOpen(false)}
-                      className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors"
-                    >
-                      <Ticket className="w-4 h-4 text-rose-500 dark:text-rose-400" />
-                      My Tickets & History
-                    </Link>
 
                     <Link
                       to="/profile"
@@ -251,42 +265,64 @@ export const Navbar = () => {
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-white/95 dark:bg-slate-950/95 border-b border-slate-200 dark:border-slate-800 px-4 pt-2 pb-6 space-y-3 shadow-lg">
-          <Link
-            to="/"
-            onClick={() => setMobileMenuOpen(false)}
-            className={`block px-3 py-2.5 rounded-xl text-sm font-medium ${
-              isActive('/') ? 'text-rose-600 dark:text-rose-400 bg-rose-500/10' : 'text-slate-700 dark:text-slate-300'
-            }`}
-          >
-            Movies
-          </Link>
-          <Link
-            to="/my-bookings"
-            onClick={() => setMobileMenuOpen(false)}
-            className={`block px-3 py-2.5 rounded-xl text-sm font-medium ${
-              isActive('/my-bookings') ? 'text-rose-600 dark:text-rose-400 bg-rose-500/10' : 'text-slate-700 dark:text-slate-300'
-            }`}
-          >
-            My Bookings
-          </Link>
-          <Link
-            to="/profile"
-            onClick={() => setMobileMenuOpen(false)}
-            className={`block px-3 py-2.5 rounded-xl text-sm font-medium ${
-              isActive('/profile') ? 'text-rose-600 dark:text-rose-400 bg-rose-500/10' : 'text-slate-700 dark:text-slate-300'
-            }`}
-          >
-            My Profile
-          </Link>
-
-          {isAdmin && (
-            <Link
-              to="/admin/dashboard"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block px-3 py-2.5 rounded-xl text-sm font-bold text-amber-600 dark:text-amber-300 bg-amber-500/10 border border-amber-500/30"
-            >
-              Admin Console
-            </Link>
+          {isAdmin ? (
+            <>
+              <Link
+                to="/admin/dashboard"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-3 py-2.5 rounded-xl text-sm font-bold text-amber-600 dark:text-amber-300 bg-amber-500/10 border border-amber-500/30"
+              >
+                Admin Operations Console
+              </Link>
+              <Link
+                to="/"
+                onClick={() => setMobileMenuOpen(false)}
+                className={`block px-3 py-2.5 rounded-xl text-sm font-medium ${
+                  isActive('/') ? 'text-rose-600 dark:text-rose-400 bg-rose-500/10' : 'text-slate-700 dark:text-slate-300'
+                }`}
+              >
+                Catalog Overview
+              </Link>
+              <Link
+                to="/profile"
+                onClick={() => setMobileMenuOpen(false)}
+                className={`block px-3 py-2.5 rounded-xl text-sm font-medium ${
+                  isActive('/profile') ? 'text-rose-600 dark:text-rose-400 bg-rose-500/10' : 'text-slate-700 dark:text-slate-300'
+                }`}
+              >
+                Account Profile
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/"
+                onClick={() => setMobileMenuOpen(false)}
+                className={`block px-3 py-2.5 rounded-xl text-sm font-medium ${
+                  isActive('/') ? 'text-rose-600 dark:text-rose-400 bg-rose-500/10' : 'text-slate-700 dark:text-slate-300'
+                }`}
+              >
+                Movies
+              </Link>
+              <Link
+                to="/my-bookings"
+                onClick={() => setMobileMenuOpen(false)}
+                className={`block px-3 py-2.5 rounded-xl text-sm font-medium ${
+                  isActive('/my-bookings') ? 'text-rose-600 dark:text-rose-400 bg-rose-500/10' : 'text-slate-700 dark:text-slate-300'
+                }`}
+              >
+                My Bookings
+              </Link>
+              <Link
+                to="/profile"
+                onClick={() => setMobileMenuOpen(false)}
+                className={`block px-3 py-2.5 rounded-xl text-sm font-medium ${
+                  isActive('/profile') ? 'text-rose-600 dark:text-rose-400 bg-rose-500/10' : 'text-slate-700 dark:text-slate-300'
+                }`}
+              >
+                My Profile
+              </Link>
+            </>
           )}
 
           <div className="pt-3 border-t border-slate-200 dark:border-slate-800">

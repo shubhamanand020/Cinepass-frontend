@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Modal } from '../common/Modal';
 import { useAuth } from '../../context/AuthContext';
 import { Mail, Lock, Loader2, ArrowRight } from 'lucide-react';
 
 export const LoginModal = () => {
+  const navigate = useNavigate();
   const { isLoginOpen, closeAuthModals, openRegister, login, loading } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -19,9 +21,12 @@ export const LoginModal = () => {
     }
 
     try {
-      await login(email.trim(), password);
+      const loggedUser = await login(email.trim(), password);
       setEmail('');
       setPassword('');
+      if (loggedUser?.role === 'ROLE_ADMIN') {
+        navigate('/admin/dashboard', { replace: true });
+      }
     } catch (err) {
       setFormError(err.message || 'Login failed.');
     }

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { bookingApi } from '../api/bookingApi';
 import { showApi } from '../api/showApi';
 import { movieApi } from '../api/movieApi';
+import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import {
   Ticket,
@@ -13,6 +14,7 @@ import {
   QrCode,
   Download,
   CheckCircle2,
+  Shield,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { QrTicketModal } from '../components/seats/QrTicketModal';
@@ -21,6 +23,7 @@ const FALLBACK_POSTER =
   'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=600';
 
 export const MyBookingsPage = () => {
+  const { isAdmin } = useAuth();
   const [bookings, setBookings] = useState([]);
   const [showsMap, setShowsMap] = useState(new Map());
   const [moviesMap, setMoviesMap] = useState(new Map());
@@ -162,6 +165,28 @@ export const MyBookingsPage = () => {
       return '7:00 PM';
     }
   };
+
+  if (isAdmin) {
+    return (
+      <div className="py-20 text-center space-y-4 max-w-lg mx-auto animate-fadeIn">
+        <div className="w-16 h-16 mx-auto rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-500 shadow-lg shadow-amber-500/10">
+          <Shield className="w-8 h-8" />
+        </div>
+        <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">Administrator Console Notice</h2>
+        <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+          The <span className="font-semibold text-rose-500">My Bookings</span> view is reserved for customer ticket management. As an Administrator, all cinema bookings, ticket statuses, and admission check-ins are monitored in the <span className="font-semibold text-amber-500">Bookings Audit</span> section.
+        </p>
+        <div className="pt-2">
+          <Link
+            to="/admin/dashboard?tab=bookings"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-white bg-amber-600 hover:bg-amber-500 transition-all shadow-lg shadow-amber-600/25 active:scale-95"
+          >
+            Open All Bookings Audit
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8 pb-16">
