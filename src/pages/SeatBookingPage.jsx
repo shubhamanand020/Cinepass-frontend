@@ -272,7 +272,7 @@ export const SeatBookingPage = () => {
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-xs font-semibold">
             <ShieldCheck className="w-3.5 h-3.5" />
-            5-Min Atomic Seat Engine
+            5-Minute Guaranteed Seat Hold
           </div>
 
           <button

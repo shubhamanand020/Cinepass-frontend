@@ -220,8 +220,8 @@ export const MovieDetailPage = () => {
                   <span className="text-slate-200 font-semibold mt-0.5 block">RGB Laser 4K</span>
                 </div>
                 <div>
-                  <span className="text-slate-500 font-medium block">Seat Lock Engine</span>
-                  <span className="text-rose-400 font-semibold mt-0.5 block">5-Minute Atomic Hold</span>
+                  <span className="text-slate-500 font-medium block">Seat Guarantee</span>
+                  <span className="text-rose-400 font-semibold mt-0.5 block">5-Minute Reservation Hold</span>
                 </div>
               </div>
             </div>

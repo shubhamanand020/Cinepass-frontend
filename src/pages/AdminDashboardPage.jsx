@@ -87,11 +87,11 @@ export const AdminDashboardPage = () => {
         showsRes.status === 'rejected' &&
         bookingsRes.status === 'rejected'
       ) {
-        setError('Failed to load administrative data from cinema microservices.');
+        setError('Failed to load administrative operations data.');
       }
     } catch (err) {
       console.error('Error fetching admin data:', err);
-      setError('An unexpected error occurred while contacting microservices.');
+      setError('An unexpected error occurred while loading operations data.');
     } finally {
       setLoading(false);
     }
@@ -337,7 +337,7 @@ export const AdminDashboardPage = () => {
           className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border border-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-300 dark:hover:text-white dark:border-transparent text-xs font-semibold transition-colors disabled:opacity-50"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
-          Refresh Microservices
+          Refresh Operations Data
         </button>
       </div>
 

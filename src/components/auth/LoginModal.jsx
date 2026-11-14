@@ -21,12 +21,11 @@ export const LoginModal = () => {
     }
 
     try {
-      const loggedUser = await login(email.trim(), password);
+      await login(email.trim(), password);
       setEmail('');
       setPassword('');
-      if (loggedUser?.role === 'ROLE_ADMIN') {
-        navigate('/admin/dashboard', { replace: true });
-      }
+      // Keep user on the default landing page '/' with header role-specific buttons
+      navigate('/', { replace: true });
     } catch (err) {
       setFormError(err.message || 'Login failed.');
     }

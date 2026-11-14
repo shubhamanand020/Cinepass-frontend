@@ -30,7 +30,7 @@ export const Navbar = () => {
   }, []);
 
   return (
-    <nav className="sticky top-0 z-40 w-full bg-white/85 dark:bg-slate-950/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800/80 transition-colors duration-200">
+    <nav className="sticky top-0 z-40 w-full bg-white/90 dark:bg-slate-950/85 backdrop-blur-xl border-b border-orange-200/80 dark:border-amber-500/20 shadow-sm shadow-orange-500/5 dark:shadow-amber-950/25 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo & Brand */}
@@ -43,8 +43,8 @@ export const Navbar = () => {
                 <span className="font-extrabold text-lg tracking-tight bg-gradient-to-r from-rose-600 via-rose-500 to-amber-500 dark:from-rose-400 dark:via-rose-200 dark:to-amber-200 bg-clip-text text-transparent">
                   CINEPASS
                 </span>
-                <span className="text-[10px] tracking-widest uppercase text-slate-500 dark:text-slate-400 font-semibold -mt-1">
-                  Microservices Cinema
+                <span className="text-[10px] tracking-widest uppercase text-amber-600 dark:text-amber-400/90 font-bold -mt-1">
+                  PREMIER CINEMAS
                 </span>
               </div>
             </Link>
@@ -103,8 +103,27 @@ export const Navbar = () => {
             </div>
           </div>
 
-          {/* Right Action: Search, Theme Switcher & Auth */}
+          {/* Right Action: Role-Specific Action Button, Search, Theme Switcher & Auth */}
           <div className="hidden md:flex items-center gap-3">
+            {/* Header Role-Specific Action Button */}
+            {isAdmin ? (
+              <Link
+                to="/admin/dashboard"
+                className="hidden lg:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold text-amber-900 dark:text-amber-200 bg-amber-400/25 hover:bg-amber-400/35 dark:bg-amber-500/20 dark:hover:bg-amber-500/30 border border-amber-500/40 shadow-sm transition-all active:scale-95"
+              >
+                <Shield className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+                <span>Admin Dashboard</span>
+              </Link>
+            ) : (
+              <a
+                href="/#catalog"
+                className="hidden lg:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-rose-600 via-rose-500 to-amber-500 hover:from-rose-500 hover:to-amber-400 shadow-md shadow-rose-600/25 transition-all active:scale-95"
+              >
+                <Ticket className="w-3.5 h-3.5" />
+                <span>Book Movies</span>
+              </a>
+            )}
+
             {/* Quick Search Trigger */}
             <button
               onClick={() => setSearchModalOpen(true)}
@@ -270,9 +289,10 @@ export const Navbar = () => {
               <Link
                 to="/admin/dashboard"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block px-3 py-2.5 rounded-xl text-sm font-bold text-amber-600 dark:text-amber-300 bg-amber-500/10 border border-amber-500/30"
+                className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-bold text-amber-900 dark:text-amber-200 bg-amber-400/30 dark:bg-amber-500/20 border border-amber-500/40 shadow-sm"
               >
-                Admin Operations Console
+                <Shield className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+                Admin Dashboard Console
               </Link>
               <Link
                 to="/"
@@ -295,6 +315,14 @@ export const Navbar = () => {
             </>
           ) : (
             <>
+              <a
+                href="/#catalog"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-rose-600 via-rose-500 to-amber-500 shadow-md shadow-rose-600/30"
+              >
+                <Ticket className="w-4 h-4" />
+                Book Movies
+              </a>
               <Link
                 to="/"
                 onClick={() => setMobileMenuOpen(false)}

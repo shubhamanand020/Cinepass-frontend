@@ -140,7 +140,7 @@ export const AdminOverviewTab = ({
           <div>
             <h4 className="text-base font-bold text-white mb-2">Operational Shortcuts</h4>
             <p className="text-xs text-slate-400 mb-5">
-              Rapidly trigger core administrative actions across cinema microservices.
+              Rapidly trigger core administrative actions across cinema operations.
             </p>
             <div className="space-y-2.5">
               <button
@@ -187,7 +187,7 @@ export const AdminOverviewTab = ({
           </div>
 
           <div className="mt-6 pt-4 border-t border-slate-800 text-xs text-slate-500 flex items-center justify-between">
-            <span>Spring Security RBAC</span>
+            <span>Administrative Security</span>
             <span className="font-mono text-amber-400 font-semibold">ROLE_ADMIN Active</span>
           </div>
         </div>
