@@ -10,7 +10,7 @@ import { authApi } from '../api/authApi';
 import { bookingApi } from '../api/bookingApi';
 
 export const ProfilePage = () => {
-  const { user, updateUser, isAdmin } = useAuth();
+  const { user, updateUser } = useAuth();
   const { showToast } = useToast();
 
   const [loading, setLoading] = useState(true);
@@ -44,6 +44,13 @@ export const ProfilePage = () => {
 
       if (profileData.status === 'fulfilled' && profileData.value) {
         setProfile(profileData.value);
+        if (profileData.value.role) {
+          updateUser({
+            role: profileData.value.role,
+            name: profileData.value.name,
+            phone: profileData.value.phone
+          });
+        }
         setProfileForm({
           name: profileData.value.name || '',
           phone: profileData.value.phone || ''
@@ -59,7 +66,7 @@ export const ProfilePage = () => {
     } finally {
       setLoading(false);
     }
-  }, [showToast]);
+  }, [showToast, updateUser]);
 
   useEffect(() => {
     loadProfileData();
@@ -165,11 +172,7 @@ export const ProfilePage = () => {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 relative z-10">
           <div className="flex items-center gap-5">
             {/* Avatar Initials */}
-            <div className={`w-20 h-20 rounded-2xl flex items-center justify-center text-white text-2xl font-black uppercase shadow-xl ${
-              isAdmin 
-                ? 'bg-gradient-to-tr from-amber-500 to-rose-600 shadow-amber-500/20' 
-                : 'bg-gradient-to-tr from-rose-500 to-indigo-600 shadow-rose-500/20'
-            }`}>
+            <div className="w-20 h-20 rounded-2xl flex items-center justify-center text-white text-2xl font-black uppercase shadow-xl bg-gradient-to-tr from-rose-500 to-amber-600 shadow-rose-500/20">
               {(profile?.name || user?.name || user?.email || 'CP').slice(0, 2)}
             </div>
 
@@ -178,13 +181,6 @@ export const ProfilePage = () => {
                 <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
                   {profile?.name || user?.name || 'Customer'}
                 </h1>
-                <span className={`px-2.5 py-0.5 rounded-full text-xs font-mono font-bold border ${
-                  isAdmin 
-                    ? 'bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/30' 
-                    : 'bg-rose-500/10 text-rose-600 dark:text-rose-300 border-rose-500/30'
-                }`}>
-                  {profile?.role || user?.role || 'ROLE_USER'}
-                </span>
               </div>
               
               <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500 dark:text-slate-400">

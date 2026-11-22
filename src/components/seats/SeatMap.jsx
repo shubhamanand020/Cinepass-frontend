@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 
 export const SeatMap = ({
   seats = [],
+  screen = null,
   selectedSeats = [],
   heldSeats = [],
   onToggleSeat,
@@ -50,12 +51,12 @@ export const SeatMap = ({
       <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 px-4 py-3 rounded-2xl bg-slate-900/60 border border-slate-800 text-xs text-slate-300">
         <div className="flex items-center gap-2">
           <div className="w-5 h-5 rounded-md border border-emerald-500/50 bg-slate-950 flex items-center justify-center text-[10px] text-emerald-400 font-bold" />
-          <span>Standard Available</span>
+          <span>Standard (Front Rows)</span>
         </div>
 
         <div className="flex items-center gap-2">
           <div className="w-5 h-5 rounded-md border border-purple-500/50 bg-slate-950 flex items-center justify-center text-[10px] text-purple-400 font-bold" />
-          <span>Premium Available</span>
+          <span>Premium (Last {screen?.premiumRows ? `${screen.premiumRows} ` : ''}Rows)</span>
         </div>
 
         <div className="flex items-center gap-2">

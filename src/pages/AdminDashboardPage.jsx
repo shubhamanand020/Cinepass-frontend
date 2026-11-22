@@ -246,7 +246,12 @@ export const AdminDashboardPage = () => {
   const handleSaveShow = async (showData, id = null) => {
     try {
       setActionLoading(true);
-      if (id) {
+      if (Array.isArray(showData)) {
+        for (const item of showData) {
+          await showApi.createShow(item);
+        }
+        showToast(`Successfully scheduled ${showData.length} showtimes in one operation!`, 'success');
+      } else if (id) {
         await showApi.updateShow(id, showData);
         showToast('Showtime updated successfully!', 'success');
       } else {

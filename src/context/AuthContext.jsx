@@ -4,12 +4,39 @@ import { useToast } from './ToastContext';
 
 const AuthContext = createContext(null);
 
+// Safely parse JWT token payload
+const parseJwt = (token) => {
+  try {
+    const base64Url = token.split('.')[1];
+    if (!base64Url) return null;
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split('')
+        .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+        .join('')
+    );
+    return JSON.parse(jsonPayload);
+  } catch {
+    return null;
+  }
+};
+
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(() => localStorage.getItem('cinepass_token'));
   const [user, setUser] = useState(() => {
     try {
       const saved = localStorage.getItem('cinepass_user');
-      return saved ? JSON.parse(saved) : null;
+      const parsed = saved ? JSON.parse(saved) : null;
+      const savedToken = localStorage.getItem('cinepass_token');
+      if (savedToken && parsed) {
+        const decoded = parseJwt(savedToken);
+        const tokenRole = decoded?.role || (Array.isArray(decoded?.roles) ? decoded.roles[0] : null);
+        if (tokenRole && parsed.role !== tokenRole) {
+          parsed.role = tokenRole;
+        }
+      }
+      return parsed;
     } catch {
       return null;
     }
@@ -44,22 +71,24 @@ export const AuthProvider = ({ children }) => {
     try {
       const data = await authApi.login({ email, password });
       const authToken = data.token;
+      const decoded = parseJwt(authToken);
+      const tokenRole = data.role || decoded?.role || (Array.isArray(decoded?.roles) ? decoded.roles[0] : 'ROLE_USER');
+
       let userData = {
         id: data.userId,
         email: data.email,
         name: data.email.split('@')[0],
-        role: data.role || 'ROLE_USER',
+        role: tokenRole,
       };
 
       // Attempt to load full user profile for display name and role
       try {
         localStorage.setItem('cinepass_token', authToken);
-        const profile = await authApi.getUserProfile(data.userId);
-        if (profile && profile.name) {
-          userData.name = profile.name;
-        }
-        if (profile && profile.role) {
-          userData.role = profile.role;
+        const profile = await authApi.getMyProfile();
+        if (profile) {
+          if (profile.name) userData.name = profile.name;
+          if (profile.role) userData.role = profile.role;
+          if (profile.phone) userData.phone = profile.phone;
         }
       } catch (profileErr) {
         console.warn('Could not load detailed profile, using basic info', profileErr);

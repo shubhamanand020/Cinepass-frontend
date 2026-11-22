@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { showApi } from '../api/showApi';
 import { movieApi } from '../api/movieApi';
@@ -19,6 +19,53 @@ import {
   Film,
   Shield,
 } from 'lucide-react';
+
+// Calculate dynamic seat tier & price: last N rows closest to the back are Premium, front rows closest to screen are Standard
+const enrichSeatsWithScreenConfig = (rawSeats, currentScreen, currentShow) => {
+  if (!Array.isArray(rawSeats)) return [];
+  if (!currentScreen?.rows || currentScreen.premiumRows === undefined) {
+    return rawSeats;
+  }
+
+  const totalRows = Number(currentScreen.rows) || 0;
+  const premiumRows = Math.max(0, Math.min(Number(currentScreen.premiumRows) || 0, totalRows));
+  const premiumStartRow = totalRows - premiumRows;
+
+  // Extract all unique row keys sorted alphabetically
+  const uniqueRowKeys = Array.from(
+    new Set(
+      rawSeats.map((s) => {
+        const match = s.seatNumber?.match(/^([A-Z]+)/);
+        return match ? match[1] : s.seatNumber?.[0] || 'A';
+      })
+    )
+  ).sort();
+
+  const rowKeyToIndex = new Map();
+  uniqueRowKeys.forEach((key, idx) => rowKeyToIndex.set(key, idx));
+
+  return rawSeats.map((seat) => {
+    const match = seat.seatNumber?.match(/^([A-Z]+)/);
+    const rowKey = match ? match[1] : seat.seatNumber?.[0] || 'A';
+    const rowIdx = rowKeyToIndex.has(rowKey)
+      ? rowKeyToIndex.get(rowKey)
+      : rowKey.charCodeAt(0) - 65;
+
+    const isPremium = premiumRows > 0 && rowIdx >= premiumStartRow;
+    const computedType = isPremium ? 'PREMIUM' : 'STANDARD';
+
+    let computedPrice = seat.price;
+    if (currentShow) {
+      computedPrice = isPremium ? currentShow.premiumPrice : currentShow.basePrice;
+    }
+
+    return {
+      ...seat,
+      seatType: computedType,
+      price: computedPrice !== undefined && computedPrice !== null ? computedPrice : seat.price,
+    };
+  });
+};
 
 export const SeatBookingPage = () => {
   const { showId } = useParams();
@@ -61,16 +108,19 @@ export const SeatBookingPage = () => {
         showApi.getAvailability(showId),
       ]);
 
+      const screenObj = screenData.status === 'fulfilled' ? screenData.value : null;
       if (movieData.status === 'fulfilled') setMovie(movieData.value);
-      if (screenData.status === 'fulfilled') setScreen(screenData.value);
+      if (screenObj) setScreen(screenObj);
 
+      let fetchedSeats = [];
       if (availabilityData.status === 'fulfilled' && availabilityData.value) {
-        setSeats(availabilityData.value);
+        fetchedSeats = availabilityData.value;
       } else {
         // Fallback to static seats layout from show-service
         const staticSeats = await showApi.getSeats(showId);
-        setSeats(staticSeats.map((s) => ({ ...s, status: 'AVAILABLE' })));
+        fetchedSeats = staticSeats.map((s) => ({ ...s, status: 'AVAILABLE' }));
       }
+      setSeats(enrichSeatsWithScreenConfig(fetchedSeats, screenObj, showData));
     } catch (err) {
       setError(err.message || 'Failed to load show and seat layout.');
     } finally {
@@ -90,7 +140,7 @@ export const SeatBookingPage = () => {
       try {
         const live = await showApi.getAvailability(showId);
         if (live && live.length > 0) {
-          setSeats(live);
+          setSeats(enrichSeatsWithScreenConfig(live, screen, show));
         }
       } catch {
         // ignore background poll error
@@ -98,7 +148,7 @@ export const SeatBookingPage = () => {
     }, 15000);
 
     return () => clearInterval(interval);
-  }, [showId, activeBooking]);
+  }, [showId, activeBooking, screen, show]);
 
   const [currentTime] = useState(() => Date.now());
 
@@ -171,7 +221,7 @@ export const SeatBookingPage = () => {
 
       // Refresh seat statuses
       const live = await showApi.getAvailability(showId);
-      if (live) setSeats(live);
+      if (live) setSeats(enrichSeatsWithScreenConfig(live, screen, show));
     } catch (err) {
       toastError(err.message || 'Could not hold seats. Some may already be taken.');
       // Refresh to get fresh state
@@ -253,15 +303,38 @@ export const SeatBookingPage = () => {
     return (
       <div className="py-16 text-center space-y-4">
         <AlertCircle className="w-12 h-12 text-rose-500 mx-auto" />
-        <h2 className="text-xl font-bold text-slate-100">Unable to Load Show</h2>
-        <p className="text-sm text-slate-400 max-w-md mx-auto">{error || 'Show not found.'}</p>
+        <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">Unable to Load Show</h2>
+        <p className="text-sm text-slate-600 dark:text-slate-400 max-w-md mx-auto">{error || 'Show not found.'}</p>
         <Link
           to="/"
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-slate-800 hover:bg-slate-700 transition-colors"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-slate-800 hover:bg-slate-700 transition-colors shadow"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Movies
         </Link>
+      </div>
+    );
+  }
+
+  if (isShowExpired) {
+    return (
+      <div className="py-20 text-center space-y-4 max-w-md mx-auto animate-fadeIn">
+        <div className="w-16 h-16 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mx-auto text-amber-600 dark:text-amber-400">
+          <Clock className="w-8 h-8" />
+        </div>
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Screening Concluded</h2>
+        <p className="text-sm text-slate-600 dark:text-slate-400">
+          This theatrical screening took place in the past. Online ticket reservations are no longer available for this showtime.
+        </p>
+        <div className="pt-2">
+          <Link
+            to="/movies"
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold text-white bg-rose-600 hover:bg-rose-500 transition-colors shadow-lg shadow-rose-600/20"
+          >
+            <Film className="w-4 h-4" />
+            Browse Upcoming Movies
+          </Link>
+        </div>
       </div>
     );
   }
@@ -362,6 +435,7 @@ export const SeatBookingPage = () => {
           {/* Seat Grid Map */}
           <SeatMap
             seats={seats}
+            screen={screen}
             selectedSeats={selectedSeatNumbers}
             heldSeats={activeBooking?.seatNumbers || []}
             onToggleSeat={handleToggleSeat}

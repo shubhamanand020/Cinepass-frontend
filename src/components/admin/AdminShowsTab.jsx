@@ -1,56 +1,176 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { 
-  Plus, Edit3, Trash2, Calendar, Clock, Tv, Sparkles, AlertTriangle 
+  Plus, Edit3, Trash2, Calendar, Clock, Tv, Sparkles, 
+  AlertTriangle, CheckCircle2, History, LayoutGrid, X, AlertCircle
 } from 'lucide-react';
 import { Modal } from '../common/Modal';
 
 export const AdminShowsTab = ({ 
-  shows, 
-  movies, 
-  screens, 
-  moviesMap, 
-  screensMap, 
+  shows = [], 
+  movies = [], 
+  screens = [], 
+  moviesMap = {}, 
+  screensMap = {}, 
   onSaveShow, 
   onDeleteShow, 
   isLoading 
 }) => {
   const [currentTime] = useState(() => Date.now());
+  const [activeSection, setActiveSection] = useState('active'); // 'active' | 'expired' | 'all'
   const [filterMovieId, setFilterMovieId] = useState('');
   const [filterScreenId, setFilterScreenId] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [selectedShow, setSelectedShow] = useState(null);
+
+  // Form State supporting single (edit) and multiple showtimes (create)
   const [formData, setFormData] = useState({
     movieId: '',
     screenId: '',
-    showTime: '',
+    showTimes: [''], // for multiple showtimes in single operation
+    showTime: '',    // for edit mode
     basePrice: 200,
     premiumPrice: 350
   });
   const [formErrors, setFormErrors] = useState({});
+  const [conflictError, setConflictError] = useState(null);
 
-  const filteredShows = shows.filter((show) => {
-    if (filterMovieId && String(show.movieId) !== String(filterMovieId)) return false;
-    if (filterScreenId && String(show.screenId) !== String(filterScreenId)) return false;
-    return true;
-  });
+  // Filter shows based on movie and screen dropdowns
+  const filteredShows = useMemo(() => {
+    return shows.filter((show) => {
+      if (filterMovieId && String(show.movieId) !== String(filterMovieId)) return false;
+      if (filterScreenId && String(show.screenId) !== String(filterScreenId)) return false;
+      return true;
+    });
+  }, [shows, filterMovieId, filterScreenId]);
 
-  const openCreateModal = () => {
+  // Partition shows into active (present/future) and expired
+  const activeShows = useMemo(() => {
+    return filteredShows.filter((s) => s.showTime && new Date(s.showTime).getTime() >= currentTime);
+  }, [filteredShows, currentTime]);
+
+  const expiredShows = useMemo(() => {
+    return filteredShows.filter((s) => s.showTime && new Date(s.showTime).getTime() < currentTime);
+  }, [filteredShows, currentTime]);
+
+  const displayedShows = activeSection === 'active' 
+    ? activeShows 
+    : activeSection === 'expired' 
+    ? expiredShows 
+    : filteredShows;
+
+  // Screen Allocations Overview computation
+  const screenStats = useMemo(() => {
+    return screens.map((screen) => {
+      const screenShows = shows.filter((s) => String(s.screenId) === String(screen.id));
+      const upcoming = screenShows.filter((s) => s.showTime && new Date(s.showTime).getTime() >= currentTime);
+      const expired = screenShows.filter((s) => s.showTime && new Date(s.showTime).getTime() < currentTime);
+
+      // Group upcoming shows by movie
+      const movieMap = new Map();
+      upcoming.forEach((s) => {
+        if (!movieMap.has(s.movieId)) {
+          movieMap.set(s.movieId, []);
+        }
+        movieMap.get(s.movieId).push(s);
+      });
+
+      return {
+        screen,
+        totalShows: screenShows.length,
+        upcomingShows: upcoming,
+        expiredShows: expired,
+        movieMap,
+        isActive: upcoming.length > 0,
+      };
+    });
+  }, [screens, shows, currentTime]);
+
+  const activeScreensCount = screenStats.filter((s) => s.isActive).length;
+  const emptyScreensCount = screens.length - activeScreensCount;
+  const totalExpiredShowsCount = useMemo(() => {
+    return shows.filter((s) => s.showTime && new Date(s.showTime).getTime() < currentTime).length;
+  }, [shows, currentTime]);
+
+  // Conflict Detection Engine: detects overlapping movie showtimes on the same screen
+  const detectConflict = (screenId, movieId, startTimeStr, excludeShowId = null) => {
+    if (!screenId || !movieId || !startTimeStr) return null;
+    const candidateStart = new Date(startTimeStr).getTime();
+    if (isNaN(candidateStart)) return null;
+
+    const candidateMovie = moviesMap[movieId];
+    const candidateDuration = Number(candidateMovie?.duration) || 120;
+    const candidateEnd = candidateStart + candidateDuration * 60 * 1000;
+
+    for (const s of shows) {
+      if (excludeShowId && s.id === excludeShowId) continue;
+      if (String(s.screenId) !== String(screenId)) continue;
+      if (!s.showTime) continue;
+
+      const existingStart = new Date(s.showTime).getTime();
+      if (isNaN(existingStart)) continue;
+      const existingMovie = moviesMap[s.movieId];
+      const existingDuration = Number(existingMovie?.duration) || 120;
+      const existingEnd = existingStart + existingDuration * 60 * 1000;
+
+      // Overlap: candidate starts before existing ends AND candidate ends after existing starts
+      if (candidateStart < existingEnd && candidateEnd > existingStart) {
+        return {
+          conflictingShow: s,
+          movieTitle: existingMovie?.title || `Movie #${s.movieId}`,
+          screenName: screensMap[screenId]?.name || `Screen ${screenId}`,
+          existingStart: new Date(existingStart),
+          existingEnd: new Date(existingEnd),
+        };
+      }
+    }
+    return null;
+  };
+
+  // Detect internal conflicts within the multi-showtime batch on the same screen
+  const detectBatchInternalConflict = (movieId, timeStrings) => {
+    const movie = moviesMap[movieId];
+    const duration = (Number(movie?.duration) || 120) * 60 * 1000;
+
+    const intervals = timeStrings
+      .map((t, idx) => ({ idx, start: new Date(t).getTime(), end: new Date(t).getTime() + duration }))
+      .filter((item) => !isNaN(item.start));
+
+    for (let i = 0; i < intervals.length; i++) {
+      for (let j = i + 1; j < intervals.length; j++) {
+        const a = intervals[i];
+        const b = intervals[j];
+        if (a.start < b.end && a.end > b.start) {
+          return {
+            slotA: i + 1,
+            slotB: j + 1,
+            timeA: timeStrings[i],
+            timeB: timeStrings[j],
+          };
+        }
+      }
+    }
+    return null;
+  };
+
+  // Modal Handlers
+  const openCreateModal = (preselectedScreenId = '') => {
     setSelectedShow(null);
     setFormData({
       movieId: movies[0]?.id || '',
-      screenId: screens[0]?.id || '',
+      screenId: preselectedScreenId || screens[0]?.id || '',
+      showTimes: [''],
       showTime: '',
       basePrice: 200,
       premiumPrice: 350
     });
     setFormErrors({});
+    setConflictError(null);
     setModalOpen(true);
   };
 
   const openEditModal = (show) => {
     setSelectedShow(show);
-    // Format LocalDateTime string for datetime-local input (YYYY-MM-DDTHH:mm)
     let formattedDate = '';
     if (show.showTime) {
       formattedDate = show.showTime.substring(0, 16);
@@ -59,11 +179,13 @@ export const AdminShowsTab = ({
     setFormData({
       movieId: show.movieId,
       screenId: show.screenId,
+      showTimes: [formattedDate],
       showTime: formattedDate,
       basePrice: show.basePrice,
       premiumPrice: show.premiumPrice
     });
     setFormErrors({});
+    setConflictError(null);
     setModalOpen(true);
   };
 
@@ -72,42 +194,135 @@ export const AdminShowsTab = ({
     setDeleteConfirmOpen(true);
   };
 
+  // Multi-slot management
+  const addShowtimeSlot = () => {
+    setFormData((prev) => ({
+      ...prev,
+      showTimes: [...prev.showTimes, '']
+    }));
+  };
+
+  const removeShowtimeSlot = (index) => {
+    setFormData((prev) => ({
+      ...prev,
+      showTimes: prev.showTimes.filter((_, i) => i !== index)
+    }));
+  };
+
+  const updateShowtimeSlot = (index, value) => {
+    setFormData((prev) => {
+      const updated = [...prev.showTimes];
+      updated[index] = value;
+      return { ...prev, showTimes: updated };
+    });
+    setConflictError(null);
+  };
+
+  // Format date helper for ISO submission
+  const formatISO = (dateStr) => {
+    if (!dateStr) return '';
+    return dateStr.length === 16 ? `${dateStr}:00` : dateStr;
+  };
+
+  const formatTimeStr = (dateObj) => {
+    if (!dateObj) return '';
+    return dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  };
+
   const validate = () => {
     const errors = {};
     if (!formData.movieId) errors.movieId = 'Please select a movie';
     if (!formData.screenId) errors.screenId = 'Please select a cinema screen';
-    if (!formData.showTime) errors.showTime = 'Show date and time is required';
+
+    if (selectedShow) {
+      // Edit mode: single showtime
+      if (!formData.showTime) {
+        errors.showTime = 'Show date and time is required';
+      }
+    } else {
+      // Create mode: multiple showtimes
+      const validSlots = formData.showTimes.filter((t) => !!t.trim());
+      if (validSlots.length === 0) {
+        errors.showTimes = 'Please specify at least one showtime';
+      }
+    }
+
     if (!formData.basePrice || Number(formData.basePrice) <= 0) {
       errors.basePrice = 'Valid base ticket price required';
     }
     if (!formData.premiumPrice || Number(formData.premiumPrice) <= 0) {
       errors.premiumPrice = 'Valid premium ticket price required';
     }
+
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setConflictError(null);
     if (!validate()) return;
 
-    // Format showTime to ISO format expected by Spring Boot (e.g. 2026-11-08T18:30:00)
-    let formattedShowTime = formData.showTime;
-    if (formattedShowTime.length === 16) {
-      formattedShowTime += ':00';
-    }
+    if (selectedShow) {
+      // Validate single showtime conflict
+      const conflict = detectConflict(formData.screenId, formData.movieId, formData.showTime, selectedShow.id);
+      if (conflict) {
+        setConflictError(
+          `Scheduling Conflict on ${conflict.screenName}: "${conflict.movieTitle}" is already scheduled from ${formatTimeStr(conflict.existingStart)} to ${formatTimeStr(conflict.existingEnd)}. Overlapping schedules are not permitted on the same screen.`
+        );
+        return;
+      }
 
-    const payload = {
-      movieId: parseInt(formData.movieId, 10),
-      screenId: parseInt(formData.screenId, 10),
-      showTime: formattedShowTime,
-      basePrice: parseFloat(formData.basePrice),
-      premiumPrice: parseFloat(formData.premiumPrice)
-    };
+      const payload = {
+        movieId: parseInt(formData.movieId, 10),
+        screenId: parseInt(formData.screenId, 10),
+        showTime: formatISO(formData.showTime),
+        basePrice: parseFloat(formData.basePrice),
+        premiumPrice: parseFloat(formData.premiumPrice)
+      };
 
-    const success = await onSaveShow(payload, selectedShow?.id);
-    if (success) {
-      setModalOpen(false);
+      const success = await onSaveShow(payload, selectedShow.id);
+      if (success) {
+        setModalOpen(false);
+      }
+    } else {
+      // Create mode: Validate multiple showtimes
+      const validSlots = formData.showTimes.filter((t) => !!t.trim());
+
+      // 1. Check for conflicts between slots in the same batch
+      const batchConflict = detectBatchInternalConflict(formData.movieId, validSlots);
+      if (batchConflict) {
+        setConflictError(
+          `Internal Batch Conflict: Showtime Slot #${batchConflict.slotA} (${batchConflict.timeA.replace('T', ' ')}) overlaps with Slot #${batchConflict.slotB} (${batchConflict.timeB.replace('T', ' ')}) for this movie run.`
+        );
+        return;
+      }
+
+      // 2. Check each slot against existing database shows on that screen
+      for (let i = 0; i < validSlots.length; i++) {
+        const slotTime = validSlots[i];
+        const conflict = detectConflict(formData.screenId, formData.movieId, slotTime);
+        if (conflict) {
+          setConflictError(
+            `Scheduling Conflict in Slot #${i + 1} (${slotTime.replace('T', ' ')}) on ${conflict.screenName}: "${conflict.movieTitle}" is already scheduled from ${formatTimeStr(conflict.existingStart)} to ${formatTimeStr(conflict.existingEnd)}. Please choose non-overlapping hours.`
+          );
+          return;
+        }
+      }
+
+      // Construct payload array for single batch operation
+      const payloads = validSlots.map((st) => ({
+        movieId: parseInt(formData.movieId, 10),
+        screenId: parseInt(formData.screenId, 10),
+        showTime: formatISO(st),
+        basePrice: parseFloat(formData.basePrice),
+        premiumPrice: parseFloat(formData.premiumPrice)
+      }));
+
+      const success = await onSaveShow(payloads);
+      if (success) {
+        setModalOpen(false);
+      }
     }
   };
 
@@ -121,10 +336,178 @@ export const AdminShowsTab = ({
   };
 
   return (
-    <div className="space-y-6 animate-fadeIn">
-      {/* Top Controls & Filter Bar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
-        <div className="flex flex-wrap items-center gap-3 flex-1">
+    <div className="space-y-8 animate-fadeIn">
+      {/* 1. SCREEN ALLOCATIONS & CAPACITY OVERVIEW */}
+      <div className="p-6 rounded-3xl bg-slate-900/80 border border-slate-800 shadow-xl space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800/80">
+          <div>
+            <h3 className="text-base font-bold text-white flex items-center gap-2">
+              <LayoutGrid className="w-5 h-5 text-emerald-400" />
+              <span>Cinema Screen Allocations Overview</span>
+            </h3>
+            <p className="text-xs text-slate-400 mt-0.5">
+              Live monitor of active movie allocations, screen occupancy, and available scheduling slots.
+            </p>
+          </div>
+
+          {/* Quick Metrics Bar */}
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="px-3 py-1 rounded-xl bg-slate-800/80 border border-slate-700/60 text-xs font-semibold text-slate-200">
+              Total Screens: <strong className="text-white ml-1 font-mono">{screens.length}</strong>
+            </span>
+            <span className="px-3 py-1 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs font-semibold text-emerald-400">
+              Active: <strong className="ml-1 font-mono">{activeScreensCount}</strong>
+            </span>
+            <span className="px-3 py-1 rounded-xl bg-blue-500/10 border border-blue-500/20 text-xs font-semibold text-blue-400">
+              Available: <strong className="ml-1 font-mono">{emptyScreensCount}</strong>
+            </span>
+            <span className="px-3 py-1 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs font-semibold text-amber-400">
+              Expired Runs: <strong className="ml-1 font-mono">{totalExpiredShowsCount}</strong>
+            </span>
+          </div>
+        </div>
+
+        {/* Screen Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {screenStats.map(({ screen, upcomingShows: upcoming, expiredShows: expired, movieMap, isActive }) => {
+            const totalSeats = (screen.rows || 10) * (screen.seatsPerRow || 10);
+
+            return (
+              <div 
+                key={screen.id}
+                className={`p-4 rounded-2xl border transition-all flex flex-col justify-between ${
+                  isActive 
+                    ? 'bg-slate-900/90 border-slate-700/80 shadow-md' 
+                    : 'bg-slate-950/40 border-slate-800/60 border-dashed'
+                }`}
+              >
+                <div className="space-y-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <h4 className="text-sm font-bold text-white flex items-center gap-1.5">
+                        <Tv className="w-3.5 h-3.5 text-emerald-400" />
+                        {screen.name}
+                      </h4>
+                      <p className="text-[11px] text-slate-400">{screen.theatreName}</p>
+                    </div>
+
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                      isActive 
+                        ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30' 
+                        : 'bg-slate-800 text-slate-400 border border-slate-700'
+                    }`}>
+                      {isActive ? `${upcoming.length} Shows` : 'Available'}
+                    </span>
+                  </div>
+
+                  <div className="text-[11px] text-slate-400 flex items-center justify-between border-t border-slate-800/60 pt-2">
+                    <span>Capacity: <strong className="text-slate-200">{totalSeats} seats</strong></span>
+                    <span>Completed: <strong className="text-amber-400/90">{expired.length}</strong></span>
+                  </div>
+
+                  {/* Scheduled Movies */}
+                  <div className="space-y-2 pt-1">
+                    {Array.from(movieMap.entries()).length === 0 ? (
+                      <div className="p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/80 text-center">
+                        <p className="text-[11px] text-slate-500">No scheduled upcoming shows</p>
+                        <button
+                          onClick={() => openCreateModal(screen.id)}
+                          className="mt-1.5 text-[11px] font-semibold text-emerald-400 hover:text-emerald-300 transition-colors inline-flex items-center gap-1"
+                        >
+                          <Plus className="w-3 h-3" /> Schedule Here
+                        </button>
+                      </div>
+                    ) : (
+                      Array.from(movieMap.entries()).map(([movieId, movieShows]) => {
+                        const movie = moviesMap[movieId];
+                        return (
+                          <div key={movieId} className="p-2 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-1.5">
+                            <p className="text-xs font-semibold text-slate-200 truncate">
+                              {movie?.title || `Movie #${movieId}`}
+                            </p>
+                            <div className="flex flex-wrap gap-1">
+                              {movieShows.map((s) => (
+                                <span 
+                                  key={s.id} 
+                                  className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-800 text-emerald-400 border border-slate-700/80"
+                                >
+                                  {new Date(s.showTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+                </div>
+
+                <div className="pt-3 mt-3 border-t border-slate-800/60 flex items-center justify-between text-[11px]">
+                  <span className="text-slate-500">Hall #{screen.id}</span>
+                  <button
+                    onClick={() => openCreateModal(screen.id)}
+                    className="text-emerald-400 hover:text-emerald-300 font-semibold hover:underline"
+                  >
+                    + Add Show
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* 2. SECTION TABS & CONTROLS */}
+      <div className="space-y-4">
+        {/* Navigation Tabs: Active vs Expired vs All */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-2 p-1 bg-slate-900 border border-slate-800 rounded-2xl w-fit">
+            <button
+              onClick={() => setActiveSection('active')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                activeSection === 'active'
+                  ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/20'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <CheckCircle2 className="w-3.5 h-3.5" />
+              <span>Active Schedules ({activeShows.length})</span>
+            </button>
+
+            <button
+              onClick={() => setActiveSection('expired')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                activeSection === 'expired'
+                  ? 'bg-amber-600 text-white shadow-lg shadow-amber-600/20'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <History className="w-3.5 h-3.5" />
+              <span>Expired Showtimes ({expiredShows.length})</span>
+            </button>
+
+            <button
+              onClick={() => setActiveSection('all')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                activeSection === 'all'
+                  ? 'bg-slate-800 text-white shadow'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <span>All ({filteredShows.length})</span>
+            </button>
+          </div>
+
+          <button
+            onClick={() => openCreateModal()}
+            className="flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 active:scale-[0.98] text-white rounded-xl text-sm font-semibold transition-all shadow-lg shadow-emerald-600/20"
+          >
+            <Plus className="w-4 h-4" /> Add Showtimes (Single / Multi-Slot)
+          </button>
+        </div>
+
+        {/* Filter Bar */}
+        <div className="flex flex-wrap items-center gap-3">
           {/* Movie Filter */}
           <select
             value={filterMovieId}
@@ -165,16 +548,21 @@ export const AdminShowsTab = ({
             </button>
           )}
         </div>
-
-        <button
-          onClick={openCreateModal}
-          className="flex items-center justify-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 active:scale-[0.98] text-white rounded-xl text-sm font-semibold transition-all shadow-lg shadow-emerald-600/20"
-        >
-          <Plus className="w-4 h-4" /> Schedule Show
-        </button>
       </div>
 
-      {/* Shows Table */}
+      {/* 3. SHOWS TABLE */}
+      {activeSection === 'expired' && (
+        <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs flex items-center gap-3">
+          <History className="w-5 h-5 text-amber-400 shrink-0" />
+          <div>
+            <p className="font-bold text-amber-200">Theatrical Runs Archive</p>
+            <p className="text-amber-300/80 mt-0.5">
+              These screenings have concluded and are archived for administrative audit. They are automatically hidden from customer booking.
+            </p>
+          </div>
+        </div>
+      )}
+
       <div className="bg-slate-900/60 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
@@ -189,17 +577,20 @@ export const AdminShowsTab = ({
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800/60">
-              {filteredShows.length === 0 ? (
+              {displayedShows.length === 0 ? (
                 <tr>
                   <td colSpan="6" className="py-12 text-center text-slate-500 text-sm">
-                    No scheduled shows match the selected filters.
+                    {activeSection === 'expired' 
+                      ? 'No expired showtimes found.' 
+                      : 'No scheduled shows match the selected filters.'}
                   </td>
                 </tr>
               ) : (
-                filteredShows.map((show) => {
+                displayedShows.map((show) => {
                   const movie = moviesMap[show.movieId];
                   const screen = screensMap[show.screenId];
                   const showDate = show.showTime ? new Date(show.showTime) : null;
+                  const isPast = showDate && showDate.getTime() < currentTime;
 
                   return (
                     <tr key={show.id} className="hover:bg-slate-800/30 transition-colors group">
@@ -240,9 +631,9 @@ export const AdminShowsTab = ({
                           <span className="font-semibold text-slate-200 flex items-center gap-1.5 flex-wrap">
                             <Calendar className="w-3.5 h-3.5 text-emerald-400" />
                             {showDate ? showDate.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }) : 'Pending'}
-                            {showDate && showDate.getTime() < currentTime && (
-                              <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-amber-400 border border-amber-500/30">
-                                Past
+                            {isPast && (
+                              <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30">
+                                Completed Run
                               </span>
                             )}
                           </span>
@@ -289,21 +680,34 @@ export const AdminShowsTab = ({
         </div>
       </div>
 
-      {/* Schedule / Edit Show Modal */}
+      {/* 4. SCHEDULE / EDIT SHOW MODAL (MULTI-SHOWTIME CAPABLE) */}
       <Modal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
-        title={selectedShow ? 'Edit Scheduled Showtime' : 'Schedule New Showtime'}
-        maxWidth="max-w-lg"
+        title={selectedShow ? 'Edit Scheduled Showtime' : 'Schedule Showtimes (Single or Multi-Slot)'}
+        maxWidth="max-w-xl"
       >
         <form onSubmit={handleSubmit} className="space-y-4">
+          {conflictError && (
+            <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs space-y-1 animate-fadeIn">
+              <div className="flex items-center gap-2 font-bold text-rose-200">
+                <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+                <span>Scheduling Conflict Detected</span>
+              </div>
+              <p>{conflictError}</p>
+            </div>
+          )}
+
           <div>
             <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
               Select Movie *
             </label>
             <select
               value={formData.movieId}
-              onChange={(e) => setFormData({ ...formData, movieId: e.target.value })}
+              onChange={(e) => {
+                setFormData({ ...formData, movieId: e.target.value });
+                setConflictError(null);
+              }}
               className={`w-full px-3.5 py-2 bg-slate-900 border ${
                 formErrors.movieId ? 'border-rose-500' : 'border-slate-800'
               } rounded-xl text-sm text-slate-100 focus:outline-none focus:border-emerald-500`}
@@ -324,7 +728,10 @@ export const AdminShowsTab = ({
             </label>
             <select
               value={formData.screenId}
-              onChange={(e) => setFormData({ ...formData, screenId: e.target.value })}
+              onChange={(e) => {
+                setFormData({ ...formData, screenId: e.target.value });
+                setConflictError(null);
+              }}
               className={`w-full px-3.5 py-2 bg-slate-900 border ${
                 formErrors.screenId ? 'border-rose-500' : 'border-slate-800'
               } rounded-xl text-sm text-slate-100 focus:outline-none focus:border-emerald-500`}
@@ -339,20 +746,69 @@ export const AdminShowsTab = ({
             {formErrors.screenId && <p className="text-xs text-rose-400 mt-1">{formErrors.screenId}</p>}
           </div>
 
-          <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-              Show Date & Time *
-            </label>
-            <input
-              type="datetime-local"
-              value={formData.showTime}
-              onChange={(e) => setFormData({ ...formData, showTime: e.target.value })}
-              className={`w-full px-3.5 py-2 bg-slate-900 border ${
-                formErrors.showTime ? 'border-rose-500' : 'border-slate-800'
-              } rounded-xl text-sm text-slate-100 focus:outline-none focus:border-emerald-500`}
-            />
-            {formErrors.showTime && <p className="text-xs text-rose-400 mt-1">{formErrors.showTime}</p>}
-          </div>
+          {/* Showtimes input: Single in Edit mode, Multi-Slot in Create mode */}
+          {selectedShow ? (
+            <div>
+              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                Show Date & Time *
+              </label>
+              <input
+                type="datetime-local"
+                value={formData.showTime}
+                onChange={(e) => {
+                  setFormData({ ...formData, showTime: e.target.value });
+                  setConflictError(null);
+                }}
+                className={`w-full px-3.5 py-2 bg-slate-900 border ${
+                  formErrors.showTime ? 'border-rose-500' : 'border-slate-800'
+                } rounded-xl text-sm text-slate-100 focus:outline-none focus:border-emerald-500`}
+              />
+              {formErrors.showTime && <p className="text-xs text-rose-400 mt-1">{formErrors.showTime}</p>}
+            </div>
+          ) : (
+            <div className="space-y-2.5">
+              <div className="flex items-center justify-between">
+                <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                  Showtime Slots ({formData.showTimes.length}) *
+                </label>
+                <button
+                  type="button"
+                  onClick={addShowtimeSlot}
+                  className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 flex items-center gap-1 transition-colors"
+                >
+                  <Plus className="w-3.5 h-3.5" /> Add Another Slot
+                </button>
+              </div>
+
+              <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
+                {formData.showTimes.map((timeVal, idx) => (
+                  <div key={idx} className="flex items-center gap-2">
+                    <span className="text-xs font-mono text-slate-500 w-6">#{idx + 1}</span>
+                    <input
+                      type="datetime-local"
+                      value={timeVal}
+                      onChange={(e) => updateShowtimeSlot(idx, e.target.value)}
+                      className="flex-1 px-3.5 py-2 bg-slate-900 border border-slate-800 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-emerald-500"
+                    />
+                    {formData.showTimes.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => removeShowtimeSlot(idx)}
+                        className="p-2 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 transition-colors"
+                        title="Remove slot"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+              {formErrors.showTimes && <p className="text-xs text-rose-400 mt-1">{formErrors.showTimes}</p>}
+              <p className="text-[11px] text-slate-500">
+                You can schedule multiple theatrical slots for this movie in a single operation. Each slot will be conflict-checked automatically.
+              </p>
+            </div>
+          )}
 
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -403,13 +859,19 @@ export const AdminShowsTab = ({
               disabled={isLoading}
               className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-[0.98] text-white text-sm font-semibold transition-all shadow-lg shadow-emerald-600/20 disabled:opacity-50"
             >
-              {isLoading ? 'Saving...' : selectedShow ? 'Update Showtime' : 'Schedule Showtime'}
+              {isLoading 
+                ? 'Saving...' 
+                : selectedShow 
+                ? 'Update Showtime' 
+                : formData.showTimes.length > 1 
+                ? `Schedule ${formData.showTimes.length} Showtimes` 
+                : 'Schedule Showtime'}
             </button>
           </div>
         </form>
       </Modal>
 
-      {/* Delete Confirmation Modal */}
+      {/* 5. DELETE CONFIRMATION MODAL */}
       <Modal
         isOpen={deleteConfirmOpen}
         onClose={() => setDeleteConfirmOpen(false)}
@@ -420,7 +882,7 @@ export const AdminShowsTab = ({
           <div className="flex items-start gap-3 p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300">
             <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5 text-rose-400" />
             <div className="text-sm">
-              <p className="font-semibold text-rose-200">Cancel & Delete Showtime #{selectedShow?.id}?</p>
+              <p className="font-semibold text-rose-200">Delete Showtime #{selectedShow?.id}?</p>
               <p className="mt-1 text-xs text-rose-300/80">
                 This will permanently delete this show schedule and its seating matrix. Any existing customer bookings associated with this show may be affected.
               </p>
