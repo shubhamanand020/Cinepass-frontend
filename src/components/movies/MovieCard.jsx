@@ -9,7 +9,7 @@ const FALLBACK_POSTER =
 export const MovieCard = ({ movie, onWatchTrailer }) => {
   const { isAdmin } = useAuth();
   return (
-    <div className="group flex flex-col rounded-2xl overflow-hidden bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800/90 hover:border-rose-500/50 hover:bg-slate-50/80 dark:hover:bg-slate-900 transition-all duration-300 hover:shadow-2xl hover:shadow-rose-600/15 hover:-translate-y-1.5 flex-1 shadow-sm">
+    <div className="group flex flex-col rounded-2xl overflow-hidden bg-white dark:bg-slate-900/70 border border-[#E8C77F] dark:border-[#E8C77F]/80 hover:border-[#E8C77F] hover:bg-slate-50/80 dark:hover:bg-slate-900 transition-all duration-300 hover:shadow-2xl hover:shadow-[#E8C77F]/20 hover:-translate-y-1.5 flex-1 shadow-sm">
       {/* Poster Image Container */}
       <div className="aspect-[2/3] w-full bg-slate-950 relative overflow-hidden">
         <img
@@ -86,7 +86,7 @@ export const MovieCard = ({ movie, onWatchTrailer }) => {
           </p>
         </div>
 
-        <div className="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+        <div className="pt-3 border-t border-[#E8C77F]/25 dark:border-[#E8C77F]/15 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
           <div className="flex items-center gap-1.5 font-medium">
             <Clock className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
             <span>{movie.duration ? `${movie.duration}m` : '120m'}</span>

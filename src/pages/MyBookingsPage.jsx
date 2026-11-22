@@ -140,15 +140,59 @@ export const MyBookingsPage = () => {
     }
   };
 
+  const [currentTime] = useState(() => Date.now());
+
+  const isPastBooking = useCallback((booking) => {
+    const show = showsMap.get(booking.showId);
+    if (show?.showTime) {
+      const t = new Date(show.showTime).getTime();
+      return !isNaN(t) && t < currentTime;
+    }
+    // Fallback if show is missing or showTime undefined:
+    // If booking was confirmed/created more than 24 hours ago, it's past
+    if (booking.confirmedAt) {
+      return new Date(booking.confirmedAt).getTime() + 86400000 < currentTime;
+    }
+    if (booking.createdAt) {
+      return new Date(booking.createdAt).getTime() + 86400000 < currentTime;
+    }
+    return false;
+  }, [showsMap, currentTime]);
+
+  const upcomingConfirmedCount = useMemo(() => {
+    return bookings.filter((b) => b.status === 'CONFIRMED' && !isPastBooking(b)).length;
+  }, [bookings, isPastBooking]);
+
+  const expiredCount = useMemo(() => {
+    return bookings.filter(
+      (b) =>
+        b.status === 'EXPIRED' ||
+        (b.status === 'CONFIRMED' && isPastBooking(b)) ||
+        (b.status === 'HELD' && isPastBooking(b))
+    ).length;
+  }, [bookings, isPastBooking]);
+
+  const cancelledCount = useMemo(() => {
+    return bookings.filter((b) => b.status === 'CANCELLED').length;
+  }, [bookings]);
+
   const filteredBookings = useMemo(() => {
     if (activeTab === 'CONFIRMED') {
-      return bookings.filter((b) => b.status === 'CONFIRMED');
+      return bookings.filter((b) => b.status === 'CONFIRMED' && !isPastBooking(b));
+    }
+    if (activeTab === 'EXPIRED') {
+      return bookings.filter(
+        (b) =>
+          b.status === 'EXPIRED' ||
+          (b.status === 'CONFIRMED' && isPastBooking(b)) ||
+          (b.status === 'HELD' && isPastBooking(b))
+      );
     }
     if (activeTab === 'CANCELLED') {
-      return bookings.filter((b) => b.status === 'CANCELLED' || b.status === 'EXPIRED');
+      return bookings.filter((b) => b.status === 'CANCELLED');
     }
     return bookings;
-  }, [bookings, activeTab]);
+  }, [bookings, activeTab, isPastBooking]);
 
   const formatShowTime = (timeStr) => {
     try {
@@ -212,10 +256,10 @@ export const MyBookingsPage = () => {
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800/80 pb-3">
+      <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800/80 pb-3 overflow-x-auto scrollbar-none">
         <button
           onClick={() => setActiveTab('ALL')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
             activeTab === 'ALL'
               ? 'bg-rose-600 text-white shadow-lg shadow-rose-600/30'
               : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-900'
@@ -225,25 +269,33 @@ export const MyBookingsPage = () => {
         </button>
         <button
           onClick={() => setActiveTab('CONFIRMED')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
             activeTab === 'CONFIRMED'
               ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/30'
               : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-900'
           }`}
         >
-          Confirmed (
-          {bookings.filter((b) => b.status === 'CONFIRMED').length})
+          Upcoming Confirmed ({upcomingConfirmedCount})
+        </button>
+        <button
+          onClick={() => setActiveTab('EXPIRED')}
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
+            activeTab === 'EXPIRED'
+              ? 'bg-amber-600 text-white shadow-lg shadow-amber-600/30'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-900'
+          }`}
+        >
+          Expired / Past Shows ({expiredCount})
         </button>
         <button
           onClick={() => setActiveTab('CANCELLED')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
             activeTab === 'CANCELLED'
               ? 'bg-slate-700 dark:bg-slate-800 text-white'
               : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-900'
           }`}
         >
-          Cancelled / Expired (
-          {bookings.filter((b) => b.status === 'CANCELLED' || b.status === 'EXPIRED').length})
+          Cancelled ({cancelledCount})
         </button>
       </div>
 
@@ -294,6 +346,7 @@ export const MyBookingsPage = () => {
             const show = showsMap.get(booking.showId);
             const movie = show ? moviesMap.get(show.movieId) : null;
             const screen = show ? screensMap.get(show.screenId) : null;
+            const isPast = isPastBooking(booking);
 
             const seats = booking.seatNumbers || [];
             const total = booking.totalAmount ? Number(booking.totalAmount).toFixed(2) : '0.00';
@@ -330,14 +383,16 @@ export const MyBookingsPage = () => {
                     {/* Status Badge */}
                     <span
                       className={`px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider border shrink-0 ${
-                        isConfirmed
+                        isConfirmed && !isPast
                           ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30'
-                          : isHeld
+                          : isConfirmed && isPast
                           ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/30'
+                          : isHeld && !isPast
+                          ? 'bg-blue-500/15 text-blue-600 dark:text-blue-400 border-blue-500/30'
                           : 'bg-rose-500/15 text-rose-600 dark:text-rose-400 border-rose-500/30'
                       }`}
                     >
-                      {booking.status}
+                      {isConfirmed && isPast ? 'EXPIRED (PAST SHOW)' : isHeld && isPast ? 'EXPIRED HOLD' : booking.status}
                     </span>
                   </div>
 
@@ -348,8 +403,13 @@ export const MyBookingsPage = () => {
                         <Clock className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
                         Screening Time
                       </span>
-                      <span className="font-semibold text-slate-900 dark:text-slate-200">
-                        {formatShowTime(show?.showTime)}
+                      <span className="font-semibold text-slate-900 dark:text-slate-200 flex items-center gap-1.5 flex-wrap justify-end">
+                        <span>{formatShowTime(show?.showTime)}</span>
+                        {isPast && (
+                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-normal">
+                            Concluded
+                          </span>
+                        )}
                       </span>
                     </div>
 
@@ -418,7 +478,7 @@ export const MyBookingsPage = () => {
                           className="inline-flex items-center gap-1.5 text-xs font-semibold text-rose-400 hover:text-white bg-rose-500/10 hover:bg-rose-600 px-3 py-2 rounded-xl transition-all border border-rose-500/30 shadow-sm"
                         >
                           <QrCode className="w-3.5 h-3.5" />
-                          View QR
+                          {isPast ? 'Past Pass' : 'View QR'}
                         </button>
 
                         <button
@@ -430,24 +490,36 @@ export const MyBookingsPage = () => {
                           {downloadingId === bId ? 'Saving...' : 'PDF Pass'}
                         </button>
 
-                        <button
-                          onClick={() => handleCancel(bId)}
-                          disabled={cancellingId === bId}
-                          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-rose-600 hover:bg-rose-50 dark:text-slate-400 dark:hover:text-rose-400 dark:hover:bg-rose-500/10 px-2.5 py-2 rounded-xl transition-colors border border-transparent hover:border-rose-200 dark:hover:border-rose-500/20"
-                        >
-                          <XCircle className="w-3.5 h-3.5" />
-                          {cancellingId === bId ? 'Releasing...' : 'Cancel'}
-                        </button>
+                        {!isPast ? (
+                          <button
+                            onClick={() => handleCancel(bId)}
+                            disabled={cancellingId === bId}
+                            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-rose-600 hover:bg-rose-50 dark:text-slate-400 dark:hover:text-rose-400 dark:hover:bg-rose-500/10 px-2.5 py-2 rounded-xl transition-colors border border-transparent hover:border-rose-200 dark:hover:border-rose-500/20"
+                          >
+                            <XCircle className="w-3.5 h-3.5" />
+                            {cancellingId === bId ? 'Releasing...' : 'Cancel'}
+                          </button>
+                        ) : (
+                          <span className="text-[11px] font-medium text-slate-400 dark:text-slate-500 italic py-1 px-2">
+                            Screening Concluded
+                          </span>
+                        )}
                       </>
                     )}
 
-                    {isHeld && (
+                    {isHeld && !isPast && (
                       <Link
                         to={`/booking/${booking.showId}`}
                         className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-300 hover:text-white bg-amber-500/20 hover:bg-amber-500/30 px-3.5 py-2 rounded-xl transition-colors border border-amber-500/30"
                       >
                         Resume Booking
                       </Link>
+                    )}
+
+                    {isHeld && isPast && (
+                      <span className="text-[11px] font-medium text-slate-400 dark:text-slate-500 italic py-1 px-2">
+                        Hold Expired
+                      </span>
                     )}
 
                     {(isCancelled || isExpired) && (

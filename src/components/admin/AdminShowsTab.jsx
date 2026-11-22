@@ -14,6 +14,7 @@ export const AdminShowsTab = ({
   onDeleteShow, 
   isLoading 
 }) => {
+  const [currentTime] = useState(() => Date.now());
   const [filterMovieId, setFilterMovieId] = useState('');
   const [filterScreenId, setFilterScreenId] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
@@ -236,9 +237,14 @@ export const AdminShowsTab = ({
                       </td>
                       <td className="py-3 px-4">
                         <div className="flex flex-col text-xs">
-                          <span className="font-semibold text-slate-200 flex items-center gap-1.5">
+                          <span className="font-semibold text-slate-200 flex items-center gap-1.5 flex-wrap">
                             <Calendar className="w-3.5 h-3.5 text-emerald-400" />
                             {showDate ? showDate.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }) : 'Pending'}
+                            {showDate && showDate.getTime() < currentTime && (
+                              <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-amber-400 border border-amber-500/30">
+                                Past
+                              </span>
+                            )}
                           </span>
                           <span className="text-slate-400 flex items-center gap-1.5 mt-0.5">
                             <Clock className="w-3.5 h-3.5 text-slate-500" />

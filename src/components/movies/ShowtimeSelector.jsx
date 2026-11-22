@@ -1,6 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, Armchair, Ticket } from 'lucide-react';
+import { Calendar, Armchair, Ticket, AlertCircle } from 'lucide-react';
 
 const getTodayStr = () => new Date().toISOString().split('T')[0];
 const getTomorrowStr = () => new Date(Date.now() + 86400000).toISOString().split('T')[0];
@@ -27,13 +27,26 @@ export const ShowtimeSelector = ({ shows = [], screens = [] }) => {
 
     const sortedDates = Array.from(dateSet).sort();
     if (sortedDates.length === 0) {
-      // Fallback today date if none
       return [getTodayStr()];
     }
     return sortedDates;
   }, [shows]);
 
-  const [selectedDate, setSelectedDate] = useState(() => availableDates[0] || '');
+  // Default to the first upcoming date, or the latest available date
+  const [selectedDate, setSelectedDate] = useState(() => {
+    const today = getTodayStr();
+    const upcoming = availableDates.find((d) => d >= today);
+    return upcoming || availableDates[0] || today;
+  });
+
+  // Keep selectedDate synchronized if availableDates update
+  useEffect(() => {
+    const today = getTodayStr();
+    if (!availableDates.includes(selectedDate)) {
+      const upcoming = availableDates.find((d) => d >= today);
+      setSelectedDate(upcoming || availableDates[0] || today);
+    }
+  }, [availableDates, selectedDate]);
 
   // Filter shows for the active date
   const showsForDate = useMemo(() => {
@@ -73,12 +86,13 @@ export const ShowtimeSelector = ({ shows = [], screens = [] }) => {
       const weekday = d.toLocaleDateString('en-US', { weekday: 'short' });
       const day = d.getDate();
       const month = d.toLocaleDateString('en-US', { month: 'short' });
+      const isPast = dateStr < today;
 
-      if (dateStr === today) return { label: 'Today', sub: `${day} ${month}` };
-      if (dateStr === tomorrow) return { label: 'Tomorrow', sub: `${day} ${month}` };
-      return { label: weekday, sub: `${day} ${month}` };
+      if (dateStr === today) return { label: 'Today', sub: `${day} ${month}`, isPast: false };
+      if (dateStr === tomorrow) return { label: 'Tomorrow', sub: `${day} ${month}`, isPast: false };
+      return { label: weekday, sub: `${day} ${month}`, isPast };
     } catch {
-      return { label: dateStr, sub: '' };
+      return { label: dateStr, sub: '', isPast: false };
     }
   };
 
@@ -104,30 +118,55 @@ export const ShowtimeSelector = ({ shows = [], screens = [] }) => {
     );
   }
 
+  const isSelectedDatePast = selectedDate < getTodayStr();
+
   return (
     <div className="space-y-6">
       {/* Date Tabs */}
       <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
         {availableDates.map((dateStr) => {
-          const { label, sub } = formatDateLabel(dateStr);
+          const { label, sub, isPast } = formatDateLabel(dateStr);
           const isSelected = selectedDate === dateStr;
 
           return (
             <button
               key={dateStr}
               onClick={() => setSelectedDate(dateStr)}
-              className={`flex flex-col items-center min-w-[90px] px-4 py-2.5 rounded-2xl transition-all border ${
+              className={`flex flex-col items-center min-w-[95px] px-3.5 py-2.5 rounded-2xl transition-all border relative ${
                 isSelected
                   ? 'bg-gradient-to-b from-rose-600 to-rose-700 text-white border-rose-500 shadow-lg shadow-rose-600/30 scale-[1.02]'
+                  : isPast
+                  ? 'bg-slate-100/60 hover:bg-slate-200/80 text-slate-500 hover:text-slate-800 border-slate-200/80 dark:bg-slate-900/30 dark:hover:bg-slate-800 dark:text-slate-500 dark:hover:text-slate-400 dark:border-slate-800/60 opacity-80'
                   : 'bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 border-slate-200 dark:bg-slate-900/60 dark:hover:bg-slate-800 dark:text-slate-400 dark:hover:text-slate-200 dark:border-slate-800'
               }`}
             >
-              <span className="text-xs font-bold uppercase tracking-wider">{label}</span>
+              <span className="text-[11px] font-bold uppercase tracking-wider flex items-center gap-1">
+                {label}
+                {isPast && (
+                  <span
+                    className={`text-[9px] px-1 py-0.2 rounded font-semibold ${
+                      isSelected ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-500'
+                    }`}
+                  >
+                    Past
+                  </span>
+                )}
+              </span>
               <span className="text-sm font-extrabold mt-0.5">{sub}</span>
             </button>
           );
         })}
       </div>
+
+      {/* Expired / Past Date Notice */}
+      {isSelectedDatePast && (
+        <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs flex items-center gap-2.5">
+          <AlertCircle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
+          <span>
+            <strong>Screening Date Concluded:</strong> Showtimes for this date are in the past. Online ticket reservations are closed.
+          </span>
+        </div>
+      )}
 
       {/* Screen Showtimes List */}
       <div className="space-y-4">
@@ -165,6 +204,29 @@ export const ShowtimeSelector = ({ shows = [], screens = [] }) => {
                 {screenShows.map((show) => {
                   const basePrice = show.basePrice ? Number(show.basePrice).toFixed(0) : '250';
                   const premiumPrice = show.premiumPrice ? Number(show.premiumPrice).toFixed(0) : '350';
+                  const isExpired = !show.showTime || new Date(show.showTime) < new Date();
+
+                  if (isExpired) {
+                    return (
+                      <div
+                        key={show.id}
+                        className="p-3 rounded-xl bg-slate-100/70 dark:bg-slate-950/40 border border-slate-200 dark:border-slate-800/80 text-center flex flex-col justify-between opacity-60 cursor-not-allowed select-none transition-all"
+                        title="Booking Closed: This screening has already started or concluded."
+                      >
+                        <div className="text-sm font-semibold text-slate-500 dark:text-slate-400 line-through">
+                          {formatTime(show.showTime)}
+                        </div>
+
+                        <div className="mt-1 text-[11px] text-slate-400 dark:text-slate-500">
+                          ₹{basePrice} - ₹{premiumPrice}
+                        </div>
+
+                        <div className="mt-2 text-[10px] font-bold text-amber-700 dark:text-amber-400/90 uppercase tracking-wide bg-amber-500/15 dark:bg-amber-500/20 py-0.5 px-1.5 rounded border border-amber-500/30">
+                          Booking Closed
+                        </div>
+                      </div>
+                    );
+                  }
 
                   return (
                     <Link

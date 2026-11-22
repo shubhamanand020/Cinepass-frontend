@@ -11,6 +11,7 @@ export const BookingSummaryPanel = ({
   loading = false,
   isAuthenticated = false,
   onPromptLogin,
+  isExpired = false,
 }) => {
   // Compute price totals from selectedSeats objects
   const standardSeats = selectedSeats.filter((s) => s.seatType !== 'PREMIUM');
@@ -97,7 +98,11 @@ export const BookingSummaryPanel = ({
 
       {/* Action Buttons */}
       <div className="pt-2">
-        {!isHoldActive ? (
+        {isExpired ? (
+          <div className="w-full py-3.5 px-4 rounded-xl font-bold text-xs text-center text-amber-700 dark:text-amber-300 bg-amber-500/15 border border-amber-500/30">
+            Screening Concluded — Online Booking Closed
+          </div>
+        ) : !isHoldActive ? (
           <button
             type="button"
             disabled={selectedSeats.length === 0 || loading}

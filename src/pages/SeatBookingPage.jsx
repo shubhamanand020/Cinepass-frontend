@@ -100,8 +100,22 @@ export const SeatBookingPage = () => {
     return () => clearInterval(interval);
   }, [showId, activeBooking]);
 
+  const [currentTime] = useState(() => Date.now());
+
+  // Check if show has already ended or started
+  const isShowExpired = useMemo(() => {
+    if (!show?.showTime) return false;
+    const t = new Date(show.showTime).getTime();
+    return !isNaN(t) && t < currentTime;
+  }, [show, currentTime]);
+
   // Handle seat click
   const handleToggleSeat = (seat) => {
+    if (isShowExpired) {
+      warning('This screening has already concluded. Online seat reservations are closed.');
+      return;
+    }
+
     if (activeBooking) {
       warning('You already have active held seats. Please confirm or release your current hold.');
       return;
@@ -128,6 +142,11 @@ export const SeatBookingPage = () => {
 
   // Trigger 5-Minute Atomic Seat Hold
   const handleHoldSeats = async () => {
+    if (isShowExpired) {
+      toastError('This screening has already concluded. Booking is closed.');
+      return;
+    }
+
     if (!isAuthenticated) {
       openLogin();
       return;
@@ -312,6 +331,27 @@ export const SeatBookingPage = () => {
         </div>
       </div>
 
+      {/* Expired Show Warning Banner */}
+      {isShowExpired && (
+        <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-sm flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0" />
+            <div>
+              <p className="font-bold">Screening Concluded (Booking Closed)</p>
+              <p className="text-xs text-amber-700 dark:text-amber-400/90 mt-0.5">
+                This show was scheduled for {formatShowTime(show.showTime)} and has already ended. Seat reservation is disabled.
+              </p>
+            </div>
+          </div>
+          <Link
+            to={movie ? `/movie/${movie.id}` : '/'}
+            className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-amber-600 hover:bg-amber-500 transition-colors shrink-0"
+          >
+            Select Active Show
+          </Link>
+        </div>
+      )}
+
       {/* Main Grid & Summary Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Left Section: Screen & Interactive Seat Map */}
@@ -340,6 +380,7 @@ export const SeatBookingPage = () => {
             loading={actionLoading}
             isAuthenticated={isAuthenticated}
             onPromptLogin={openLogin}
+            isExpired={isShowExpired}
           />
         </div>
       </div>

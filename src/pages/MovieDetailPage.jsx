@@ -147,7 +147,7 @@ export const MovieDetailPage = () => {
 
         <div className="relative z-10 grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
           {/* Movie Poster */}
-          <div className="md:col-span-4 lg:col-span-3 aspect-[2/3] max-w-[280px] mx-auto md:mx-0 w-full rounded-2xl overflow-hidden shadow-2xl shadow-black/80 border border-slate-800 group relative">
+          <div className="md:col-span-4 lg:col-span-3 aspect-[2/3] max-w-[280px] mx-auto md:mx-0 w-full rounded-2xl overflow-hidden shadow-2xl shadow-black/80 border border-[#E8C77F] dark:border-[#E8C77F]/80 group relative">
             <img
               src={movie.posterUrl || FALLBACK_POSTER}
               alt={movie.title}
