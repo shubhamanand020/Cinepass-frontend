@@ -21,8 +21,9 @@ export const QrTicketModal = ({
 
   useEffect(() => {
     let activeUrl = null;
-    if (isOpen && booking?.id) {
-      bookingApi.getTicketQrBlob(booking.bookingId || booking.id)
+    const targetId = booking?.bookingId || booking?.id;
+    if (isOpen && targetId) {
+      bookingApi.getTicketQrBlob(targetId)
         .then((url) => {
           activeUrl = url;
           setQrUrl(url);

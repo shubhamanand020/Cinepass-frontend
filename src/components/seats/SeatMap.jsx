@@ -48,14 +48,14 @@ export const SeatMap = ({
   return (
     <div className="w-full flex flex-col items-center space-y-8 select-none">
       {/* Seat State Legend */}
-      <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 px-4 py-3 rounded-2xl bg-slate-900/60 border border-slate-800 text-xs text-slate-300">
+      <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 px-4 py-3 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 text-xs text-slate-700 dark:text-slate-300">
         <div className="flex items-center gap-2">
-          <div className="w-5 h-5 rounded-md border border-emerald-500/50 bg-slate-950 flex items-center justify-center text-[10px] text-emerald-400 font-bold" />
+          <div className="w-5 h-5 rounded-md border border-emerald-500/50 bg-emerald-50 dark:bg-slate-950 flex items-center justify-center text-[10px] text-emerald-600 dark:text-emerald-400 font-bold" />
           <span>Standard (Front Rows)</span>
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="w-5 h-5 rounded-md border border-purple-500/50 bg-slate-950 flex items-center justify-center text-[10px] text-purple-400 font-bold" />
+          <div className="w-5 h-5 rounded-md border border-purple-500/50 bg-purple-50 dark:bg-slate-950 flex items-center justify-center text-[10px] text-purple-600 dark:text-purple-400 font-bold" />
           <span>Premium (Last {screen?.premiumRows ? `${screen.premiumRows} ` : ''}Rows)</span>
         </div>
 
@@ -70,7 +70,7 @@ export const SeatMap = ({
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="w-5 h-5 rounded-md bg-slate-800/80 border border-slate-700/50 text-slate-600 flex items-center justify-center text-[10px] font-bold cursor-not-allowed" />
+          <div className="w-5 h-5 rounded-md bg-slate-200 dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700/50 text-slate-400 dark:text-slate-600 flex items-center justify-center text-[10px] font-bold cursor-not-allowed" />
           <span>Booked / Occupied</span>
         </div>
       </div>
@@ -85,7 +85,7 @@ export const SeatMap = ({
             return (
               <div key={rowKey} className="flex items-center justify-center gap-3">
                 {/* Left Row Indicator */}
-                <div className="w-6 text-center text-xs font-bold text-slate-400 uppercase font-mono">
+                <div className="w-6 text-center text-xs font-bold text-slate-500 dark:text-slate-400 uppercase font-mono">
                   {rowKey}
                 </div>
 
@@ -99,11 +99,11 @@ export const SeatMap = ({
                     const isPremium = seat.seatType === 'PREMIUM';
 
                     let seatStyle =
-                      'bg-slate-950 hover:bg-slate-900 border-emerald-500/50 text-emerald-300 hover:border-emerald-400';
+                      'bg-slate-50 dark:bg-slate-950 hover:bg-slate-100 dark:hover:bg-slate-900 border-emerald-500/50 text-emerald-700 dark:text-emerald-300 hover:border-emerald-500';
 
                     if (isPremium) {
                       seatStyle =
-                        'bg-slate-950 hover:bg-slate-900 border-purple-500/50 text-purple-300 hover:border-purple-400';
+                        'bg-slate-50 dark:bg-slate-950 hover:bg-slate-100 dark:hover:bg-slate-900 border-purple-500/50 text-purple-700 dark:text-purple-300 hover:border-purple-500';
                     }
 
                     if (isSelected) {
@@ -114,7 +114,7 @@ export const SeatMap = ({
                         'bg-amber-500 border-amber-400 text-slate-950 font-black shadow-lg shadow-amber-500/40 animate-pulse';
                     } else if (isBooked) {
                       seatStyle =
-                        'bg-slate-900/60 border-slate-800 text-slate-600 cursor-not-allowed opacity-50';
+                        'bg-slate-200 dark:bg-slate-900/60 border-slate-300 dark:border-slate-800 text-slate-400 dark:text-slate-600 cursor-not-allowed opacity-60';
                     }
 
                     return (
@@ -147,7 +147,7 @@ export const SeatMap = ({
                 </div>
 
                 {/* Right Row Indicator */}
-                <div className="w-6 text-center text-xs font-bold text-slate-400 uppercase font-mono">
+                <div className="w-6 text-center text-xs font-bold text-slate-500 dark:text-slate-400 uppercase font-mono">
                   {rowKey}
                 </div>
               </div>

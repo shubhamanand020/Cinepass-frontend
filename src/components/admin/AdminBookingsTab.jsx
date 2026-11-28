@@ -173,13 +173,13 @@ export const AdminBookingsTab = ({
             placeholder="Search by Booking ID, Customer, Movie, Seat, Token..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-slate-900 border border-slate-800 rounded-xl text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-purple-500 transition-colors"
+            className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl text-sm text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-purple-500 transition-colors"
           />
         </div>
 
         <div className="flex items-center gap-3">
           {/* Status Filter Tabs */}
-          <div className="flex items-center gap-1.5 p-1 bg-slate-900/80 border border-slate-800 rounded-xl text-xs overflow-x-auto">
+          <div className="flex items-center gap-1.5 p-1 bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-xl text-xs overflow-x-auto">
             {['ALL', 'CONFIRMED', 'HOLD', 'CANCELLED', 'EXPIRED'].map((st) => (
               <button
                 key={st}
@@ -187,7 +187,7 @@ export const AdminBookingsTab = ({
                 className={`px-3 py-1.5 rounded-lg font-semibold transition-all ${
                   statusFilter === st
                     ? 'bg-purple-600 text-white shadow'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800'
                 }`}
               >
                 {st}
@@ -211,11 +211,11 @@ export const AdminBookingsTab = ({
       </div>
 
       {/* Bookings Audit Table */}
-      <div className="bg-slate-900/60 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+      <div className="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm dark:shadow-xl">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead>
-              <tr className="border-b border-slate-800 bg-slate-900/80 text-xs font-semibold uppercase tracking-wider text-slate-400">
+              <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/80 text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400">
                 <th className="py-3.5 px-4">Booking</th>
                 <th className="py-3.5 px-4">Customer</th>
                 <th className="py-3.5 px-4">Movie & Showtime</th>
@@ -225,7 +225,7 @@ export const AdminBookingsTab = ({
                 <th className="py-3.5 px-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
               {filteredBookings.length === 0 ? (
                 <tr>
                   <td colSpan="7" className="py-12 text-center text-slate-500 text-sm">
@@ -268,10 +268,10 @@ export const AdminBookingsTab = ({
                             {user?.name ? user.name.slice(0, 2).toUpperCase() : `U${b.userId}`}
                           </div>
                           <div>
-                            <p className="font-semibold text-slate-200 text-xs">
+                            <p className="font-semibold text-slate-900 dark:text-slate-200 text-xs">
                               {user?.name || `Customer #${b.userId}`}
                             </p>
-                            <p className="text-[11px] text-slate-400">
+                            <p className="text-[11px] text-slate-500 dark:text-slate-400">
                               {user?.email || `User ID: ${b.userId}`}
                             </p>
                           </div>
@@ -279,14 +279,14 @@ export const AdminBookingsTab = ({
                       </td>
 
                       <td className="py-3 px-4">
-                        <p className="font-bold text-white group-hover:text-purple-400 transition-colors line-clamp-1">
+                        <p className="font-bold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors line-clamp-1">
                           {movie?.title || `Show #${b.showId}`}
                         </p>
-                        <p className="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
-                          <Calendar className="w-3 h-3 text-slate-500" />
+                        <p className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-0.5">
+                          <Calendar className="w-3 h-3 text-slate-400 dark:text-slate-500" />
                           {show?.showTime ? new Date(show.showTime).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) : 'Time Pending'}
                         </p>
-                        <p className="text-[11px] text-slate-400">
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400">
                           {screen ? `${screen.name} • ${screen.theatreName}` : ''}
                         </p>
                       </td>
@@ -294,7 +294,7 @@ export const AdminBookingsTab = ({
                       <td className="py-3 px-4">
                         <div className="flex flex-wrap gap-1 max-w-[150px]">
                           {b.seatNumbers?.map((seat) => (
-                            <span key={seat} className="px-1.5 py-0.5 text-[11px] font-mono rounded bg-slate-800 text-slate-200 border border-slate-700 font-semibold">
+                            <span key={seat} className="px-1.5 py-0.5 text-[11px] font-mono rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-semibold">
                               {seat}
                             </span>
                           ))}
@@ -302,7 +302,7 @@ export const AdminBookingsTab = ({
                       </td>
 
                       <td className="py-3 px-4">
-                        <span className="font-bold text-slate-100 flex items-center gap-0.5">
+                        <span className="font-bold text-slate-900 dark:text-slate-100 flex items-center gap-0.5">
                           ₹{b.totalAmount}
                         </span>
                       </td>
@@ -310,7 +310,7 @@ export const AdminBookingsTab = ({
                       <td className="py-3 px-4">
                         {getStatusBadge(b.status)}
                         {b.checkedInAt && (
-                          <span className="text-[10px] text-emerald-400 font-semibold flex items-center gap-1 mt-1">
+                          <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1 mt-1">
                             <CheckCircle2 className="w-3 h-3" />
                             Checked In
                           </span>
@@ -324,7 +324,7 @@ export const AdminBookingsTab = ({
                               <button
                                 onClick={() => openVerifyForToken(b.ticketToken || '')}
                                 title="Check In / Verify Gate Pass"
-                                className="p-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 hover:text-emerald-300 transition-colors text-xs inline-flex items-center"
+                                className="p-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 border border-emerald-500/20 transition-colors text-xs inline-flex items-center"
                               >
                                 <ShieldCheck className="w-3.5 h-3.5" />
                               </button>
@@ -333,7 +333,7 @@ export const AdminBookingsTab = ({
                                 onClick={() => handleDirectDownload(b.id)}
                                 disabled={downloadingId === b.id}
                                 title="Download PDF Pass"
-                                className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors text-xs inline-flex items-center"
+                                className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white border border-slate-200 dark:border-slate-700 transition-colors text-xs inline-flex items-center"
                               >
                                 <Download className="w-3.5 h-3.5" />
                               </button>
@@ -372,12 +372,12 @@ export const AdminBookingsTab = ({
         maxWidth="max-w-md"
       >
         <div className="space-y-4">
-          <div className="flex items-start gap-3 p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300">
-            <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5 text-rose-400" />
+          <div className="flex items-start gap-3 p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-700 dark:text-rose-300">
+            <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5 text-rose-500 dark:text-rose-400" />
             <div className="text-sm">
-              <p className="font-semibold text-rose-200">Force cancel booking #{selectedBooking?.id}?</p>
-              <p className="mt-1 text-xs text-rose-300/80">
-                This will release seats <span className="font-mono font-bold text-white">{selectedBooking?.seatNumbers?.join(', ')}</span> back to available inventory and set the booking status to CANCELLED.
+              <p className="font-semibold text-rose-900 dark:text-rose-200">Force cancel booking #{selectedBooking?.id}?</p>
+              <p className="mt-1 text-xs text-rose-700/80 dark:text-rose-300/80">
+                This will release seats <span className="font-mono font-bold text-slate-900 dark:text-white">{selectedBooking?.seatNumbers?.join(', ')}</span> back to available inventory and set the booking status to CANCELLED.
               </p>
             </div>
           </div>
@@ -385,7 +385,7 @@ export const AdminBookingsTab = ({
           <div className="flex items-center justify-end gap-3 pt-2">
             <button
               onClick={() => setCancelModalOpen(false)}
-              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-semibold transition-colors"
+              className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-sm font-semibold transition-colors"
             >
               Close
             </button>
@@ -409,7 +409,7 @@ export const AdminBookingsTab = ({
       >
         <div className="space-y-4">
           <form onSubmit={handleVerifyTicket} className="space-y-3">
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
               Scan or Enter Ticket Token *
             </label>
             <div className="flex gap-2">
@@ -418,7 +418,7 @@ export const AdminBookingsTab = ({
                 placeholder="e.g. 550e8400-e29b-41d4-a716-446655440000"
                 value={verifyTokenInput}
                 onChange={(e) => setVerifyTokenInput(e.target.value)}
-                className="flex-1 px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs font-mono text-slate-100 focus:outline-none focus:border-emerald-500"
+                className="flex-1 px-3.5 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl text-xs font-mono text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-emerald-500"
               />
               <button
                 type="submit"
@@ -433,26 +433,26 @@ export const AdminBookingsTab = ({
           {verifyResult && (
             <div className={`p-4 rounded-2xl border space-y-3 animate-fadeIn ${
               verifyResult.valid 
-                ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300' 
+                ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700 dark:text-emerald-300' 
                 : verifyResult.alreadyCheckedIn
-                ? 'bg-amber-500/10 border-amber-500/30 text-amber-300'
-                : 'bg-rose-500/10 border-rose-500/30 text-rose-300'
+                ? 'bg-amber-500/10 border-amber-500/30 text-amber-700 dark:text-amber-300'
+                : 'bg-rose-500/10 border-rose-500/30 text-rose-700 dark:text-rose-300'
             }`}>
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
                   {verifyResult.valid ? (
                     <>
-                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
                       <span>Valid Admission Pass • Check-in OK</span>
                     </>
                   ) : verifyResult.alreadyCheckedIn ? (
                     <>
-                      <Clock className="w-4 h-4 text-amber-400" />
+                      <Clock className="w-4 h-4 text-amber-500 dark:text-amber-400" />
                       <span>Already Checked In (Used Pass)</span>
                     </>
                   ) : (
                     <>
-                      <AlertTriangle className="w-4 h-4 text-rose-400" />
+                      <AlertTriangle className="w-4 h-4 text-rose-500 dark:text-rose-400" />
                       <span>Invalid Ticket</span>
                     </>
                   )}
@@ -460,8 +460,8 @@ export const AdminBookingsTab = ({
                 {verifyResult.checkedInAt && (
                   <span className={`text-[10px] font-mono px-2 py-0.5 rounded ${
                     verifyResult.valid 
-                      ? 'bg-emerald-500/20 text-emerald-300' 
-                      : 'bg-amber-500/20 text-amber-300'
+                      ? 'bg-emerald-500/20 text-emerald-700 dark:text-emerald-300' 
+                      : 'bg-amber-500/20 text-amber-700 dark:text-amber-300'
                   }`}>
                     {verifyResult.alreadyCheckedIn ? 'Prior Check-In: ' : 'Checked In: '}
                     {new Date(verifyResult.checkedInAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -469,33 +469,33 @@ export const AdminBookingsTab = ({
                 )}
               </div>
 
-              <p className="text-sm font-semibold text-white">
+              <p className="text-sm font-semibold text-slate-900 dark:text-white">
                 {verifyResult.message}
               </p>
 
               {(verifyResult.valid || verifyResult.alreadyCheckedIn) && (
-                <div className="pt-2 border-t border-slate-700/50 grid grid-cols-2 gap-2 text-xs text-slate-300">
+                <div className="pt-2 border-t border-slate-200 dark:border-slate-700/50 grid grid-cols-2 gap-2 text-xs text-slate-700 dark:text-slate-300">
                   <div>
-                    <span className="text-[10px] text-slate-400 block uppercase">Movie</span>
-                    <span className="font-bold text-white">{verifyResult.movieTitle}</span>
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 block uppercase">Movie</span>
+                    <span className="font-bold text-slate-900 dark:text-white">{verifyResult.movieTitle}</span>
                   </div>
                   <div>
-                    <span className="text-[10px] text-slate-400 block uppercase">Screen</span>
-                    <span className="font-medium text-slate-200">{verifyResult.theatreName} • {verifyResult.screenName}</span>
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 block uppercase">Screen</span>
+                    <span className="font-medium text-slate-800 dark:text-slate-200">{verifyResult.theatreName} • {verifyResult.screenName}</span>
                   </div>
                   <div>
-                    <span className="text-[10px] text-slate-400 block uppercase">Showtime</span>
-                    <span className="font-medium text-slate-200">
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 block uppercase">Showtime</span>
+                    <span className="font-medium text-slate-800 dark:text-slate-200">
                       {verifyResult.showTime ? new Date(verifyResult.showTime).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) : 'N/A'}
                     </span>
                   </div>
                   <div>
-                    <span className="text-[10px] text-slate-400 block uppercase">Seats</span>
-                    <span className="font-mono font-bold text-rose-400">{verifyResult.seatNumbers?.join(', ')}</span>
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 block uppercase">Seats</span>
+                    <span className="font-mono font-bold text-rose-600 dark:text-rose-400">{verifyResult.seatNumbers?.join(', ')}</span>
                   </div>
                   <div>
-                    <span className="text-[10px] text-slate-400 block uppercase">Booking Ref</span>
-                    <span className="font-mono text-purple-400">#{verifyResult.bookingId}</span>
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 block uppercase">Booking Ref</span>
+                    <span className="font-mono text-purple-600 dark:text-purple-400">#{verifyResult.bookingId}</span>
                   </div>
                 </div>
               )}
@@ -505,7 +505,7 @@ export const AdminBookingsTab = ({
           <div className="flex items-center justify-end pt-2">
             <button
               onClick={() => setVerifyModalOpen(false)}
-              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition-colors"
+              className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold transition-colors"
             >
               Done
             </button>

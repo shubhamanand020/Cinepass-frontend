@@ -27,7 +27,7 @@ export const BookingSummaryPanel = ({
   const isHoldActive = activeBooking && activeBooking.status === 'HELD';
 
   return (
-    <div className="w-full bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-xl dark:shadow-2xl backdrop-blur-md space-y-5">
+    <div className="w-full bg-white dark:bg-slate-900/80 border border-slate-300 dark:border-slate-800 rounded-2xl p-6 shadow-md dark:shadow-2xl backdrop-blur-md space-y-5">
       <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800/80">
         <h3 className="font-bold text-base text-slate-900 dark:text-slate-100 flex items-center gap-2">
           <Armchair className="w-5 h-5 text-rose-500" />

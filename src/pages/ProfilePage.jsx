@@ -168,7 +168,7 @@ export const ProfilePage = () => {
   return (
     <div className="pb-16 max-w-5xl mx-auto space-y-8 animate-fadeIn">
       {/* Profile Header Hero */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-gradient-to-r dark:from-slate-900 dark:via-slate-900 dark:to-indigo-950/40 border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-2xl relative overflow-hidden">
+      <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-gradient-to-r dark:from-slate-900 dark:via-slate-900 dark:to-indigo-950/40 border border-slate-300 dark:border-slate-800 shadow-sm dark:shadow-2xl relative overflow-hidden">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 relative z-10">
           <div className="flex items-center gap-5">
             {/* Avatar Initials */}
@@ -217,12 +217,12 @@ export const ProfilePage = () => {
 
       {/* Booking Statistics Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-        <div className="p-5 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-lg">
+        <div className="p-5 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-300 dark:border-slate-800 shadow-sm dark:shadow-lg">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs uppercase font-semibold text-slate-500 dark:text-slate-400 tracking-wider">Total Bookings</p>
+              <p className="text-xs uppercase font-bold text-slate-600 dark:text-slate-400 tracking-wider">Total Bookings</p>
               <h3 className="text-3xl font-extrabold text-slate-900 dark:text-white mt-1">{myBookings.length}</h3>
-              <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">Across all cinema screenings</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Across all cinema screenings</p>
             </div>
             <div className="w-11 h-11 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-600 dark:text-purple-400">
               <Ticket className="w-5 h-5" />
@@ -230,12 +230,12 @@ export const ProfilePage = () => {
           </div>
         </div>
 
-        <div className="p-5 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-lg">
+        <div className="p-5 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-300 dark:border-slate-800 shadow-sm dark:shadow-lg">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs uppercase font-semibold text-slate-500 dark:text-slate-400 tracking-wider">Confirmed Tickets</p>
+              <p className="text-xs uppercase font-bold text-slate-600 dark:text-slate-400 tracking-wider">Confirmed Tickets</p>
               <h3 className="text-3xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-1">{confirmedBookings.length}</h3>
-              <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">Valid passes issued</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Valid passes issued</p>
             </div>
             <div className="w-11 h-11 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
               <CheckCircle2 className="w-5 h-5" />
@@ -243,12 +243,12 @@ export const ProfilePage = () => {
           </div>
         </div>
 
-        <div className="p-5 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-lg">
+        <div className="p-5 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-300 dark:border-slate-800 shadow-sm dark:shadow-lg">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs uppercase font-semibold text-slate-500 dark:text-slate-400 tracking-wider">Total Spent</p>
+              <p className="text-xs uppercase font-bold text-slate-600 dark:text-slate-400 tracking-wider">Total Spent</p>
               <h3 className="text-3xl font-extrabold text-amber-600 dark:text-amber-400 mt-1">₹{totalSpent.toFixed(2)}</h3>
-              <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">Entertainment investment</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Entertainment investment</p>
             </div>
             <div className="w-11 h-11 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600 dark:text-amber-400">
               <Shield className="w-5 h-5" />
@@ -260,7 +260,7 @@ export const ProfilePage = () => {
       {/* Main Content Grid: Personal Info & Security */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Personal Details Form */}
-        <div className="p-6 rounded-3xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-xl space-y-5">
+        <div className="p-6 rounded-3xl bg-white dark:bg-slate-900/60 border border-slate-300 dark:border-slate-800 shadow-sm dark:shadow-xl space-y-5">
           <div className="flex items-center gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
             <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-500 dark:text-blue-400">
               <User className="w-4 h-4" />
@@ -339,7 +339,7 @@ export const ProfilePage = () => {
         </div>
 
         {/* Security & Password Form */}
-        <div className="p-6 rounded-3xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-xl space-y-5">
+        <div className="p-6 rounded-3xl bg-white dark:bg-slate-900/60 border border-slate-300 dark:border-slate-800 shadow-sm dark:shadow-xl space-y-5">
           <div className="flex items-center gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
             <div className="w-8 h-8 rounded-lg bg-rose-500/10 flex items-center justify-center text-rose-500 dark:text-rose-400">
               <KeyRound className="w-4 h-4" />

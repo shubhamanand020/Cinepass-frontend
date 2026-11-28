@@ -128,45 +128,45 @@ export const BookingConfirmationModal = ({
             </div>
 
             <div className="space-y-1">
-              <h3 className="text-xl font-black text-white">Tickets Confirmed!</h3>
-              <p className="text-xs text-slate-400">
+              <h3 className="text-xl font-black text-slate-900 dark:text-white">Tickets Confirmed!</h3>
+              <p className="text-xs text-slate-600 dark:text-slate-400">
                 Your reservation has been atomically saved and confirmed in Cinepass.
               </p>
             </div>
 
             {/* Cinema Ticket Card */}
-            <div className="p-5 rounded-2xl bg-gradient-to-br from-slate-950 to-slate-900 border border-emerald-500/30 shadow-2xl space-y-4 text-left relative overflow-hidden">
-              <div className="flex items-center justify-between pb-3 border-b border-dashed border-slate-800">
+            <div className="p-5 rounded-2xl bg-slate-50 dark:bg-gradient-to-br dark:from-slate-950 dark:to-slate-900 border border-emerald-500/30 shadow-md dark:shadow-2xl space-y-4 text-left relative overflow-hidden">
+              <div className="flex items-center justify-between pb-3 border-b border-dashed border-slate-200 dark:border-slate-800">
                 <div>
-                  <span className="text-[10px] uppercase font-mono text-slate-500">
+                  <span className="text-[10px] uppercase font-mono text-slate-500 dark:text-slate-400">
                     Booking Reference
                   </span>
-                  <div className="text-base font-extrabold text-emerald-400 font-mono">
+                  <div className="text-base font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">
                     #{bookingId}
                   </div>
                 </div>
-                <div className="px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 text-xs font-bold uppercase">
+                <div className="px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30 text-xs font-bold uppercase">
                   CONFIRMED
                 </div>
               </div>
 
-              <div className="space-y-2 text-xs text-slate-300">
-                <div className="font-bold text-white text-sm">{movie?.title}</div>
+              <div className="space-y-2 text-xs text-slate-700 dark:text-slate-300">
+                <div className="font-bold text-slate-900 dark:text-white text-sm">{movie?.title}</div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Screen & Time</span>
-                  <span className="font-semibold text-slate-200">
+                  <span className="text-slate-500 dark:text-slate-400">Screen & Time</span>
+                  <span className="font-semibold text-slate-800 dark:text-slate-200">
                     Screen {show?.screenId || 1} • {formatShowTime(show?.showTime)}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Allocated Seats</span>
-                  <span className="font-bold text-rose-400 font-mono">
+                  <span className="text-slate-500 dark:text-slate-400">Allocated Seats</span>
+                  <span className="font-bold text-rose-600 dark:text-rose-400 font-mono">
                     {seats.join(', ')}
                   </span>
                 </div>
-                <div className="flex justify-between pt-2 border-t border-slate-800 font-bold">
-                  <span className="text-slate-300">Total Paid</span>
-                  <span className="text-emerald-400 font-mono">₹{total}</span>
+                <div className="flex justify-between pt-2 border-t border-slate-200 dark:border-slate-800 font-bold">
+                  <span className="text-slate-700 dark:text-slate-300">Total Paid</span>
+                  <span className="text-emerald-600 dark:text-emerald-400 font-mono">₹{total}</span>
                 </div>
               </div>
             </div>
@@ -181,7 +181,7 @@ export const BookingConfirmationModal = ({
               </Link>
               <Link
                 to="/"
-                className="flex-1 py-3 px-4 rounded-xl font-semibold text-xs text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 transition-colors flex items-center justify-center"
+                className="flex-1 py-3 px-4 rounded-xl font-semibold text-xs text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 transition-colors flex items-center justify-center"
               >
                 Back to Movies
               </Link>

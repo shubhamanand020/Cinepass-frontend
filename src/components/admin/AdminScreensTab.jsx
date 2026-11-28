@@ -114,7 +114,7 @@ export const AdminScreensTab = ({
             placeholder="Search screens by name or theatre..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-slate-900 border border-slate-800 rounded-xl text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-500 transition-colors"
+            className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl text-sm text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-amber-500 transition-colors"
           />
         </div>
 
@@ -130,7 +130,7 @@ export const AdminScreensTab = ({
         {/* Screens List */}
         <div className="lg:col-span-2 space-y-4">
           {filteredScreens.length === 0 ? (
-            <div className="p-12 text-center text-slate-500 bg-slate-900/40 border border-slate-800 rounded-2xl">
+            <div className="p-12 text-center text-slate-500 bg-slate-50 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded-2xl">
               No cinema screens registered yet. Click "Add Screen" to configure one.
             </div>
           ) : (
@@ -142,22 +142,22 @@ export const AdminScreensTab = ({
                 <div
                   key={screen.id}
                   onClick={() => setPreviewScreen(screen)}
-                  className={`p-5 rounded-2xl bg-slate-900/60 border transition-all cursor-pointer ${
+                  className={`p-5 rounded-2xl bg-white dark:bg-slate-900/60 border transition-all cursor-pointer shadow-sm ${
                     isSelected
-                      ? 'border-amber-500/80 bg-slate-900 shadow-lg shadow-amber-500/10'
-                      : 'border-slate-800 hover:border-slate-700 hover:bg-slate-900/80'
+                      ? 'border-amber-500/80 bg-amber-50/50 dark:bg-slate-900 shadow-lg shadow-amber-500/10'
+                      : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-900/80'
                   }`}
                 >
                   <div className="flex items-start justify-between">
                     <div>
                       <div className="flex items-center gap-2">
-                        <h4 className="font-bold text-white text-base">{screen.name}</h4>
-                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">
+                        <h4 className="font-bold text-slate-900 dark:text-white text-base">{screen.name}</h4>
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
                           ID: #{screen.id}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-400 flex items-center gap-1.5 mt-1">
-                        <Building className="w-3.5 h-3.5 text-amber-400" />
+                      <p className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1.5 mt-1">
+                        <Building className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
                         {screen.theatreName}
                       </p>
                     </div>
@@ -169,7 +169,7 @@ export const AdminScreensTab = ({
                           openEditModal(screen);
                         }}
                         title="Edit Screen"
-                        className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors"
+                        className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white border border-slate-200 dark:border-slate-700 transition-colors"
                       >
                         <Edit3 className="w-4 h-4" />
                       </button>
@@ -179,30 +179,30 @@ export const AdminScreensTab = ({
                           openDeleteModal(screen);
                         }}
                         title="Delete Screen"
-                        className="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 hover:text-rose-300 transition-colors"
+                        className="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 hover:text-rose-700 dark:text-rose-400 dark:hover:text-rose-300 border border-rose-500/20 transition-colors"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-3 mt-4 pt-3 border-t border-slate-800/80 text-xs">
+                  <div className="grid grid-cols-3 gap-3 mt-4 pt-3 border-t border-slate-200 dark:border-slate-800/80 text-xs">
                     <div>
-                      <span className="text-slate-500">Dimensions</span>
-                      <p className="font-semibold text-slate-200 mt-0.5">
+                      <span className="text-slate-500 dark:text-slate-400">Dimensions</span>
+                      <p className="font-semibold text-slate-800 dark:text-slate-200 mt-0.5">
                         {screen.rows} rows × {screen.seatsPerRow} cols
                       </p>
                     </div>
                     <div>
-                      <span className="text-slate-500">Premium Rows</span>
-                      <p className="font-semibold text-amber-400 mt-0.5 flex items-center gap-1">
+                      <span className="text-slate-500 dark:text-slate-400">Premium Rows</span>
+                      <p className="font-semibold text-amber-600 dark:text-amber-400 mt-0.5 flex items-center gap-1">
                         <Sparkles className="w-3 h-3" />
                         {screen.premiumRows || 0} rows
                       </p>
                     </div>
                     <div>
-                      <span className="text-slate-500">Total Capacity</span>
-                      <p className="font-semibold text-slate-200 mt-0.5">
+                      <span className="text-slate-500 dark:text-slate-400">Total Capacity</span>
+                      <p className="font-semibold text-slate-800 dark:text-slate-200 mt-0.5">
                         {totalCapacity} seats
                       </p>
                     </div>
@@ -214,10 +214,10 @@ export const AdminScreensTab = ({
         </div>
 
         {/* Live Seat Layout Visualizer */}
-        <div className="lg:col-span-1 p-5 rounded-2xl bg-slate-900/50 border border-slate-800 sticky top-24 self-start">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
-            <h4 className="text-sm font-bold text-white flex items-center gap-2">
-              <Grid3X3 className="w-4 h-4 text-amber-400" />
+        <div className="lg:col-span-1 p-5 rounded-2xl bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 shadow-sm sticky top-24 self-start">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800 mb-4">
+            <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <Grid3X3 className="w-4 h-4 text-amber-500 dark:text-amber-400" />
               Seat Grid Layout Preview
             </h4>
           </div>
@@ -225,8 +225,8 @@ export const AdminScreensTab = ({
           {previewScreen ? (
             <div className="space-y-4">
               <div className="text-xs">
-                <span className="font-bold text-white">{previewScreen.name}</span>
-                <p className="text-slate-400">{previewScreen.theatreName}</p>
+                <span className="font-bold text-slate-900 dark:text-white">{previewScreen.name}</span>
+                <p className="text-slate-500 dark:text-slate-400">{previewScreen.theatreName}</p>
               </div>
 
               {/* Curved Screen Indicator */}
@@ -236,14 +236,14 @@ export const AdminScreensTab = ({
               </div>
 
               {/* Mini Seat Matrix */}
-              <div className="max-h-64 overflow-y-auto p-2 rounded-xl bg-slate-950/60 border border-slate-800/80 flex flex-col items-center gap-1.5">
+              <div className="max-h-64 overflow-y-auto p-2 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 flex flex-col items-center gap-1.5">
                 {Array.from({ length: Math.min(previewScreen.rows || 0, 12) }).map((_, rIdx) => {
                   const rowLetter = String.fromCharCode(65 + rIdx);
                   const isPremium = rIdx >= (previewScreen.rows - (previewScreen.premiumRows || 0));
 
                   return (
                     <div key={rowLetter} className="flex items-center gap-1">
-                      <span className="w-3 text-[9px] font-mono text-slate-500 text-center font-bold">
+                      <span className="w-3 text-[9px] font-mono text-slate-500 dark:text-slate-400 text-center font-bold">
                         {rowLetter}
                       </span>
                       <div className="flex gap-1">
@@ -253,8 +253,8 @@ export const AdminScreensTab = ({
                             title={`${rowLetter}${cIdx + 1} (${isPremium ? 'Premium' : 'Standard'})`}
                             className={`w-3.5 h-3.5 rounded-sm transition-all ${
                               isPremium
-                                ? 'bg-amber-500/80 hover:bg-amber-400'
-                                : 'bg-slate-700 hover:bg-slate-600'
+                                ? 'bg-amber-500 hover:bg-amber-400'
+                                : 'bg-slate-300 hover:bg-slate-400 dark:bg-slate-700 dark:hover:bg-slate-600'
                             }`}
                           />
                         ))}
@@ -265,14 +265,14 @@ export const AdminScreensTab = ({
               </div>
 
               {/* Legend */}
-              <div className="flex items-center justify-around pt-3 border-t border-slate-800 text-[11px] text-slate-400">
+              <div className="flex items-center justify-around pt-3 border-t border-slate-200 dark:border-slate-800 text-[11px] text-slate-600 dark:text-slate-400">
                 <div className="flex items-center gap-1.5">
-                  <div className="w-3 h-3 rounded bg-slate-700"></div>
+                  <div className="w-3 h-3 rounded bg-slate-300 dark:bg-slate-700"></div>
                   <span>Standard</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <div className="w-3 h-3 rounded bg-amber-500"></div>
-                  <span className="text-amber-400 font-medium">Premium</span>
+                  <span className="text-amber-600 dark:text-amber-400 font-semibold">Premium</span>
                 </div>
               </div>
             </div>
@@ -293,7 +293,7 @@ export const AdminScreensTab = ({
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
               Screen Name / Number *
             </label>
             <input
@@ -301,15 +301,15 @@ export const AdminScreensTab = ({
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               placeholder="e.g. Screen 1 - IMAX Laser"
-              className={`w-full px-3.5 py-2 bg-slate-900 border ${
-                formErrors.name ? 'border-rose-500' : 'border-slate-800'
-              } rounded-xl text-sm text-slate-100 focus:outline-none focus:border-amber-500`}
+              className={`w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-900 border ${
+                formErrors.name ? 'border-rose-500' : 'border-slate-300 dark:border-slate-800'
+              } rounded-xl text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:border-amber-500`}
             />
             {formErrors.name && <p className="text-xs text-rose-400 mt-1">{formErrors.name}</p>}
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
               Theatre / Cinema Hall Name *
             </label>
             <input
@@ -317,16 +317,16 @@ export const AdminScreensTab = ({
               value={formData.theatreName}
               onChange={(e) => setFormData({ ...formData, theatreName: e.target.value })}
               placeholder="e.g. Cinepass Grand Multiplex"
-              className={`w-full px-3.5 py-2 bg-slate-900 border ${
-                formErrors.theatreName ? 'border-rose-500' : 'border-slate-800'
-              } rounded-xl text-sm text-slate-100 focus:outline-none focus:border-amber-500`}
+              className={`w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-900 border ${
+                formErrors.theatreName ? 'border-rose-500' : 'border-slate-300 dark:border-slate-800'
+              } rounded-xl text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:border-amber-500`}
             />
             {formErrors.theatreName && <p className="text-xs text-rose-400 mt-1">{formErrors.theatreName}</p>}
           </div>
 
           <div className="grid grid-cols-3 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
                 Rows *
               </label>
               <input
@@ -335,15 +335,15 @@ export const AdminScreensTab = ({
                 max="26"
                 value={formData.rows}
                 onChange={(e) => setFormData({ ...formData, rows: e.target.value })}
-                className={`w-full px-3 py-2 bg-slate-900 border ${
-                  formErrors.rows ? 'border-rose-500' : 'border-slate-800'
-                } rounded-xl text-sm text-slate-100 focus:outline-none focus:border-amber-500`}
+                className={`w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border ${
+                  formErrors.rows ? 'border-rose-500' : 'border-slate-300 dark:border-slate-800'
+                } rounded-xl text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:border-amber-500`}
               />
               {formErrors.rows && <p className="text-xs text-rose-400 mt-1">{formErrors.rows}</p>}
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
                 Seats/Row *
               </label>
               <input
@@ -352,15 +352,15 @@ export const AdminScreensTab = ({
                 max="30"
                 value={formData.seatsPerRow}
                 onChange={(e) => setFormData({ ...formData, seatsPerRow: e.target.value })}
-                className={`w-full px-3 py-2 bg-slate-900 border ${
-                  formErrors.seatsPerRow ? 'border-rose-500' : 'border-slate-800'
-                } rounded-xl text-sm text-slate-100 focus:outline-none focus:border-amber-500`}
+                className={`w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border ${
+                  formErrors.seatsPerRow ? 'border-rose-500' : 'border-slate-300 dark:border-slate-800'
+                } rounded-xl text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:border-amber-500`}
               />
               {formErrors.seatsPerRow && <p className="text-xs text-rose-400 mt-1">{formErrors.seatsPerRow}</p>}
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
                 Premium Rows *
               </label>
               <input
@@ -368,26 +368,26 @@ export const AdminScreensTab = ({
                 min="0"
                 value={formData.premiumRows}
                 onChange={(e) => setFormData({ ...formData, premiumRows: e.target.value })}
-                className={`w-full px-3 py-2 bg-slate-900 border ${
-                  formErrors.premiumRows ? 'border-rose-500' : 'border-slate-800'
-                } rounded-xl text-sm text-slate-100 focus:outline-none focus:border-amber-500`}
+                className={`w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border ${
+                  formErrors.premiumRows ? 'border-rose-500' : 'border-slate-300 dark:border-slate-800'
+                } rounded-xl text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:border-amber-500`}
               />
               {formErrors.premiumRows && <p className="text-xs text-rose-400 mt-1">{formErrors.premiumRows}</p>}
             </div>
           </div>
 
-          <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-400 flex items-center justify-between">
+          <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400 flex items-center justify-between">
             <span>Calculated Capacity:</span>
-            <span className="font-bold text-white text-sm">
+            <span className="font-bold text-slate-900 dark:text-white text-sm">
               {(Number(formData.rows || 0) * Number(formData.seatsPerRow || 0))} seats
             </span>
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
             <button
               type="button"
               onClick={() => setModalOpen(false)}
-              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-semibold transition-colors"
+              className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-sm font-semibold transition-colors"
             >
               Cancel
             </button>
@@ -410,11 +410,11 @@ export const AdminScreensTab = ({
         maxWidth="max-w-md"
       >
         <div className="space-y-4">
-          <div className="flex items-start gap-3 p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300">
-            <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5 text-rose-400" />
+          <div className="flex items-start gap-3 p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-700 dark:text-rose-300">
+            <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5 text-rose-500 dark:text-rose-400" />
             <div className="text-sm">
-              <p className="font-semibold text-rose-200">Delete "{selectedScreen?.name}"?</p>
-              <p className="mt-1 text-xs text-rose-300/80">
+              <p className="font-semibold text-rose-900 dark:text-rose-200">Delete "{selectedScreen?.name}"?</p>
+              <p className="mt-1 text-xs text-rose-700/80 dark:text-rose-300/80">
                 Removing this screen will also prevent scheduling future shows on this screen.
               </p>
             </div>
@@ -423,7 +423,7 @@ export const AdminScreensTab = ({
           <div className="flex items-center justify-end gap-3 pt-2">
             <button
               onClick={() => setDeleteConfirmOpen(false)}
-              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-semibold transition-colors"
+              className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-sm font-semibold transition-colors"
             >
               Cancel
             </button>

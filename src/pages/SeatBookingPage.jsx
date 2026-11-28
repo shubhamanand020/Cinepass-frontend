@@ -390,7 +390,7 @@ export const SeatBookingPage = () => {
       </div>
 
       {/* Show & Movie Title Banner */}
-      <div className="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-300 dark:border-slate-800 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400 mb-1">
             <Film className="w-3.5 h-3.5" />
@@ -440,7 +440,7 @@ export const SeatBookingPage = () => {
       {/* Main Grid & Summary Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Left Section: Screen & Interactive Seat Map */}
-        <div className="lg:col-span-8 p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800/80 shadow-sm dark:shadow-2xl flex flex-col items-center">
+        <div className="lg:col-span-8 p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800/80 shadow-sm dark:shadow-2xl flex flex-col items-center">
           {/* Cinema Screen Visual Curve */}
           <ScreenVisual />
 

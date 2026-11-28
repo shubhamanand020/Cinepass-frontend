@@ -347,7 +347,7 @@ export const AdminDashboardPage = () => {
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-slate-200 dark:border-slate-800">
+      <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-slate-300 dark:border-slate-800">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
@@ -356,10 +356,10 @@ export const AdminDashboardPage = () => {
             <button
               key={item.id}
               onClick={() => handleTabChange(item.id)}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all whitespace-nowrap ${
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all whitespace-nowrap border ${
                 isActive
-                  ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/20 font-bold'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-900'
+                  ? 'bg-amber-500 text-slate-950 border-amber-600/40 shadow-lg shadow-amber-500/20 font-bold'
+                  : 'text-slate-700 hover:text-slate-950 bg-white hover:bg-slate-100 border-slate-200 dark:bg-transparent dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-900 dark:border-transparent'
               }`}
             >
               <Icon className="w-4 h-4" />
@@ -367,7 +367,7 @@ export const AdminDashboardPage = () => {
               {item.count !== null && (
                 <span
                   className={`text-[11px] px-2 py-0.5 rounded-full font-mono font-bold ${
-                    isActive ? 'bg-slate-950/20 text-slate-950' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
+                    isActive ? 'bg-slate-950/20 text-slate-950' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
                   }`}
                 >
                   {item.count}
@@ -391,10 +391,10 @@ export const AdminDashboardPage = () => {
         <div className="space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="h-32 rounded-2xl bg-slate-900/60 border border-slate-800 animate-pulse" />
+              <div key={i} className="h-32 rounded-2xl bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 animate-pulse" />
             ))}
           </div>
-          <div className="h-64 rounded-2xl bg-slate-900/40 border border-slate-800 animate-pulse" />
+          <div className="h-64 rounded-2xl bg-slate-100 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 animate-pulse" />
         </div>
       ) : (
         /* Tab Views */

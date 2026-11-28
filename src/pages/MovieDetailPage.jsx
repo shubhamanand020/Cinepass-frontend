@@ -276,14 +276,14 @@ export const MovieDetailPage = () => {
         </div>
 
         {isAdmin ? (
-          <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 text-slate-200 space-y-4">
+          <div className="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 shadow-sm space-y-4">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
-                <span className="font-bold text-amber-400 text-sm flex items-center gap-2">
-                  <Shield className="w-4 h-4 text-amber-400" />
+                <span className="font-bold text-amber-600 dark:text-amber-400 text-sm flex items-center gap-2">
+                  <Shield className="w-4 h-4 text-amber-600 dark:text-amber-400" />
                   Administrator Mode Active
                 </span>
-                <p className="text-xs text-slate-400 mt-1">
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                   Customer seat reservation is separated from administrative accounts. You have {shows.length} showtime(s) scheduled for this film.
                 </p>
               </div>
@@ -296,19 +296,19 @@ export const MovieDetailPage = () => {
             </div>
 
             {shows.length > 0 && (
-              <div className="pt-3 border-t border-slate-800/80">
-                <p className="text-xs font-semibold text-slate-400 mb-2">Configured Showtimes:</p>
+              <div className="pt-3 border-t border-slate-100 dark:border-slate-800/80">
+                <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2">Configured Showtimes:</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                   {shows.map((s) => {
                     const screen = screens.find((sc) => sc.id === s.screenId);
                     return (
-                      <div key={s.id} className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 text-xs space-y-1">
-                        <div className="flex items-center justify-between font-mono text-[11px] text-amber-400">
+                      <div key={s.id} className="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 text-xs space-y-1">
+                        <div className="flex items-center justify-between font-mono text-[11px] text-amber-600 dark:text-amber-400">
                           <span>Show #{s.id}</span>
                           <span>₹{s.basePrice} / ₹{s.premiumPrice}</span>
                         </div>
-                        <p className="font-medium text-white">{screen ? `${screen.name} (${screen.theatreName})` : `Screen #${s.screenId}`}</p>
-                        <p className="text-slate-400 text-[11px]">
+                        <p className="font-medium text-slate-900 dark:text-white">{screen ? `${screen.name} (${screen.theatreName})` : `Screen #${s.screenId}`}</p>
+                        <p className="text-slate-500 dark:text-slate-400 text-[11px]">
                           {s.showTime ? new Date(s.showTime).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) : 'Time Pending'}
                         </p>
                       </div>

@@ -338,30 +338,30 @@ export const AdminShowsTab = ({
   return (
     <div className="space-y-8 animate-fadeIn">
       {/* 1. SCREEN ALLOCATIONS & CAPACITY OVERVIEW */}
-      <div className="p-6 rounded-3xl bg-slate-900/80 border border-slate-800 shadow-xl space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800/80">
+      <div className="p-6 rounded-3xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-xl space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100 dark:border-slate-800/80">
           <div>
-            <h3 className="text-base font-bold text-white flex items-center gap-2">
-              <LayoutGrid className="w-5 h-5 text-emerald-400" />
+            <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <LayoutGrid className="w-5 h-5 text-emerald-500 dark:text-emerald-400" />
               <span>Cinema Screen Allocations Overview</span>
             </h3>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               Live monitor of active movie allocations, screen occupancy, and available scheduling slots.
             </p>
           </div>
 
           {/* Quick Metrics Bar */}
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="px-3 py-1 rounded-xl bg-slate-800/80 border border-slate-700/60 text-xs font-semibold text-slate-200">
-              Total Screens: <strong className="text-white ml-1 font-mono">{screens.length}</strong>
+            <span className="px-3 py-1 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/60 text-xs font-semibold text-slate-700 dark:text-slate-200">
+              Total Screens: <strong className="text-slate-900 dark:text-white ml-1 font-mono">{screens.length}</strong>
             </span>
-            <span className="px-3 py-1 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs font-semibold text-emerald-400">
+            <span className="px-3 py-1 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
               Active: <strong className="ml-1 font-mono">{activeScreensCount}</strong>
             </span>
-            <span className="px-3 py-1 rounded-xl bg-blue-500/10 border border-blue-500/20 text-xs font-semibold text-blue-400">
+            <span className="px-3 py-1 rounded-xl bg-blue-500/10 border border-blue-500/20 text-xs font-semibold text-blue-600 dark:text-blue-400">
               Available: <strong className="ml-1 font-mono">{emptyScreensCount}</strong>
             </span>
-            <span className="px-3 py-1 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs font-semibold text-amber-400">
+            <span className="px-3 py-1 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs font-semibold text-amber-600 dark:text-amber-400">
               Expired Runs: <strong className="ml-1 font-mono">{totalExpiredShowsCount}</strong>
             </span>
           </div>
@@ -377,42 +377,42 @@ export const AdminShowsTab = ({
                 key={screen.id}
                 className={`p-4 rounded-2xl border transition-all flex flex-col justify-between ${
                   isActive 
-                    ? 'bg-slate-900/90 border-slate-700/80 shadow-md' 
-                    : 'bg-slate-950/40 border-slate-800/60 border-dashed'
+                    ? 'bg-white dark:bg-slate-900/90 border-slate-300 dark:border-slate-700/80 shadow-sm' 
+                    : 'bg-slate-50 dark:bg-slate-950/40 border-slate-300 dark:border-slate-800/80 border-dashed'
                 }`}
               >
                 <div className="space-y-3">
                   <div className="flex items-start justify-between gap-2">
                     <div>
-                      <h4 className="text-sm font-bold text-white flex items-center gap-1.5">
-                        <Tv className="w-3.5 h-3.5 text-emerald-400" />
+                      <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                        <Tv className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                         {screen.name}
                       </h4>
-                      <p className="text-[11px] text-slate-400">{screen.theatreName}</p>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400">{screen.theatreName}</p>
                     </div>
 
                     <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
                       isActive 
-                        ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30' 
-                        : 'bg-slate-800 text-slate-400 border border-slate-700'
+                        ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30' 
+                        : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700'
                     }`}>
                       {isActive ? `${upcoming.length} Shows` : 'Available'}
                     </span>
                   </div>
 
-                  <div className="text-[11px] text-slate-400 flex items-center justify-between border-t border-slate-800/60 pt-2">
-                    <span>Capacity: <strong className="text-slate-200">{totalSeats} seats</strong></span>
-                    <span>Completed: <strong className="text-amber-400/90">{expired.length}</strong></span>
+                  <div className="text-[11px] text-slate-600 dark:text-slate-400 flex items-center justify-between border-t border-slate-200 dark:border-slate-800/60 pt-2">
+                    <span>Capacity: <strong className="text-slate-900 dark:text-slate-200">{totalSeats} seats</strong></span>
+                    <span>Completed: <strong className="text-amber-600 dark:text-amber-400 font-mono">{expired.length}</strong></span>
                   </div>
 
                   {/* Scheduled Movies */}
                   <div className="space-y-2 pt-1">
                     {Array.from(movieMap.entries()).length === 0 ? (
-                      <div className="p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/80 text-center">
-                        <p className="text-[11px] text-slate-500">No scheduled upcoming shows</p>
+                      <div className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 text-center">
+                        <p className="text-[11px] text-slate-600 dark:text-slate-400 font-medium">No scheduled upcoming shows</p>
                         <button
                           onClick={() => openCreateModal(screen.id)}
-                          className="mt-1.5 text-[11px] font-semibold text-emerald-400 hover:text-emerald-300 transition-colors inline-flex items-center gap-1"
+                          className="mt-1.5 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 dark:hover:text-emerald-300 transition-colors inline-flex items-center gap-1"
                         >
                           <Plus className="w-3 h-3" /> Schedule Here
                         </button>
@@ -421,15 +421,15 @@ export const AdminShowsTab = ({
                       Array.from(movieMap.entries()).map(([movieId, movieShows]) => {
                         const movie = moviesMap[movieId];
                         return (
-                          <div key={movieId} className="p-2 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-1.5">
-                            <p className="text-xs font-semibold text-slate-200 truncate">
+                          <div key={movieId} className="p-2 rounded-xl bg-slate-100 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 space-y-1.5">
+                            <p className="text-xs font-semibold text-slate-900 dark:text-slate-200 truncate">
                               {movie?.title || `Movie #${movieId}`}
                             </p>
                             <div className="flex flex-wrap gap-1">
                               {movieShows.map((s) => (
                                 <span 
                                   key={s.id} 
-                                  className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-800 text-emerald-400 border border-slate-700/80"
+                                  className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white dark:bg-slate-800 text-emerald-700 dark:text-emerald-400 border border-slate-200 dark:border-slate-700/80 shadow-2xs font-semibold"
                                 >
                                   {new Date(s.showTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                 </span>
@@ -442,11 +442,11 @@ export const AdminShowsTab = ({
                   </div>
                 </div>
 
-                <div className="pt-3 mt-3 border-t border-slate-800/60 flex items-center justify-between text-[11px]">
-                  <span className="text-slate-500">Hall #{screen.id}</span>
+                <div className="pt-3 mt-3 border-t border-slate-200 dark:border-slate-800/60 flex items-center justify-between text-[11px]">
+                  <span className="text-slate-500 dark:text-slate-400 font-medium">Hall #{screen.id}</span>
                   <button
                     onClick={() => openCreateModal(screen.id)}
-                    className="text-emerald-400 hover:text-emerald-300 font-semibold hover:underline"
+                    className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 dark:hover:text-emerald-300 font-semibold hover:underline"
                   >
                     + Add Show
                   </button>
@@ -461,13 +461,13 @@ export const AdminShowsTab = ({
       <div className="space-y-4">
         {/* Navigation Tabs: Active vs Expired vs All */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-2 p-1 bg-slate-900 border border-slate-800 rounded-2xl w-fit">
+          <div className="flex items-center gap-2 p-1 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-fit">
             <button
               onClick={() => setActiveSection('active')}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
                 activeSection === 'active'
                   ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/20'
-                  : 'text-slate-400 hover:text-slate-200'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
               }`}
             >
               <CheckCircle2 className="w-3.5 h-3.5" />
@@ -479,7 +479,7 @@ export const AdminShowsTab = ({
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
                 activeSection === 'expired'
                   ? 'bg-amber-600 text-white shadow-lg shadow-amber-600/20'
-                  : 'text-slate-400 hover:text-slate-200'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
               }`}
             >
               <History className="w-3.5 h-3.5" />
@@ -490,8 +490,8 @@ export const AdminShowsTab = ({
               onClick={() => setActiveSection('all')}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
                 activeSection === 'all'
-                  ? 'bg-slate-800 text-white shadow'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'bg-slate-900 text-white dark:bg-slate-800 shadow'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
               }`}
             >
               <span>All ({filteredShows.length})</span>
@@ -512,7 +512,7 @@ export const AdminShowsTab = ({
           <select
             value={filterMovieId}
             onChange={(e) => setFilterMovieId(e.target.value)}
-            className="px-3.5 py-2 bg-slate-900 border border-slate-800 rounded-xl text-sm text-slate-200 focus:outline-none focus:border-emerald-500"
+            className="px-3.5 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl text-sm text-slate-900 dark:text-slate-200 focus:outline-none focus:border-emerald-500"
           >
             <option value="">All Movies ({movies.length})</option>
             {movies.map((m) => (
@@ -526,7 +526,7 @@ export const AdminShowsTab = ({
           <select
             value={filterScreenId}
             onChange={(e) => setFilterScreenId(e.target.value)}
-            className="px-3.5 py-2 bg-slate-900 border border-slate-800 rounded-xl text-sm text-slate-200 focus:outline-none focus:border-emerald-500"
+            className="px-3.5 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl text-sm text-slate-900 dark:text-slate-200 focus:outline-none focus:border-emerald-500"
           >
             <option value="">All Screens ({screens.length})</option>
             {screens.map((s) => (
@@ -563,11 +563,11 @@ export const AdminShowsTab = ({
         </div>
       )}
 
-      <div className="bg-slate-900/60 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+      <div className="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm dark:shadow-xl">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead>
-              <tr className="border-b border-slate-800 bg-slate-900/80 text-xs font-semibold uppercase tracking-wider text-slate-400">
+              <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/80 text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400">
                 <th className="py-3.5 px-4">Show ID</th>
                 <th className="py-3.5 px-4">Movie</th>
                 <th className="py-3.5 px-4">Screen & Theatre</th>
@@ -576,7 +576,7 @@ export const AdminShowsTab = ({
                 <th className="py-3.5 px-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
               {displayedShows.length === 0 ? (
                 <tr>
                   <td colSpan="6" className="py-12 text-center text-slate-500 text-sm">
@@ -593,8 +593,8 @@ export const AdminShowsTab = ({
                   const isPast = showDate && showDate.getTime() < currentTime;
 
                   return (
-                    <tr key={show.id} className="hover:bg-slate-800/30 transition-colors group">
-                      <td className="py-3 px-4 font-mono text-xs font-bold text-emerald-400">
+                    <tr key={show.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors group">
+                      <td className="py-3 px-4 font-mono text-xs font-bold text-emerald-600 dark:text-emerald-400">
                         #{show.id}
                       </td>
                       <td className="py-3 px-4">
@@ -602,53 +602,53 @@ export const AdminShowsTab = ({
                           <img
                             src={movie?.posterUrl || 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba'}
                             alt={movie?.title || 'Movie'}
-                            className="w-9 h-12 object-cover rounded-md border border-slate-800 shadow"
+                            className="w-9 h-12 object-cover rounded-md border border-slate-200 dark:border-slate-800 shadow-xs"
                             onError={(e) => {
                               e.target.src = 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba';
                             }}
                           />
                           <div>
-                            <p className="font-bold text-white group-hover:text-emerald-400 transition-colors">
+                            <p className="font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
                               {movie?.title || `Movie #${show.movieId}`}
                             </p>
-                            <p className="text-xs text-slate-400">
+                            <p className="text-xs text-slate-500 dark:text-slate-400">
                               {movie?.genre} • {movie?.duration}m
                             </p>
                           </div>
                         </div>
                       </td>
                       <td className="py-3 px-4">
-                        <p className="font-medium text-slate-200">
+                        <p className="font-semibold text-slate-800 dark:text-slate-200">
                           {screen?.name || `Screen #${show.screenId}`}
                         </p>
-                        <p className="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
-                          <Tv className="w-3 h-3 text-slate-500" />
+                        <p className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-0.5">
+                          <Tv className="w-3 h-3 text-slate-400 dark:text-slate-500" />
                           {screen?.theatreName || 'Main Complex'}
                         </p>
                       </td>
                       <td className="py-3 px-4">
                         <div className="flex flex-col text-xs">
-                          <span className="font-semibold text-slate-200 flex items-center gap-1.5 flex-wrap">
-                            <Calendar className="w-3.5 h-3.5 text-emerald-400" />
+                          <span className="font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1.5 flex-wrap">
+                            <Calendar className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                             {showDate ? showDate.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }) : 'Pending'}
                             {isPast && (
-                              <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30">
+                              <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30">
                                 Completed Run
                               </span>
                             )}
                           </span>
-                          <span className="text-slate-400 flex items-center gap-1.5 mt-0.5">
-                            <Clock className="w-3.5 h-3.5 text-slate-500" />
+                          <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1.5 mt-0.5">
+                            <Clock className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
                             {showDate ? showDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }) : ''}
                           </span>
                         </div>
                       </td>
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-2 text-xs">
-                          <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-200 border border-slate-700 font-mono">
+                          <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-mono">
                             Base: ₹{show.basePrice}
                           </span>
-                          <span className="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 font-mono flex items-center gap-0.5">
+                          <span className="px-2 py-0.5 rounded bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20 font-mono flex items-center gap-0.5">
                             <Sparkles className="w-3 h-3" /> ₹{show.premiumPrice}
                           </span>
                         </div>
@@ -658,14 +658,14 @@ export const AdminShowsTab = ({
                           <button
                             onClick={() => openEditModal(show)}
                             title="Edit Show"
-                            className="p-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors"
+                            className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/80 dark:hover:bg-slate-700 text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white border border-slate-200 dark:border-slate-700 transition-colors"
                           >
                             <Edit3 className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => openDeleteModal(show)}
                             title="Delete Show"
-                            className="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 hover:text-rose-300 transition-colors"
+                            className="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 hover:text-rose-700 dark:text-rose-400 dark:hover:text-rose-300 border border-rose-500/20 transition-colors"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -689,9 +689,9 @@ export const AdminShowsTab = ({
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           {conflictError && (
-            <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs space-y-1 animate-fadeIn">
-              <div className="flex items-center gap-2 font-bold text-rose-200">
-                <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+            <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-700 dark:text-rose-300 text-xs space-y-1 animate-fadeIn">
+              <div className="flex items-center gap-2 font-bold text-rose-900 dark:text-rose-200">
+                <AlertCircle className="w-4 h-4 text-rose-500 dark:text-rose-400 shrink-0" />
                 <span>Scheduling Conflict Detected</span>
               </div>
               <p>{conflictError}</p>
@@ -699,7 +699,7 @@ export const AdminShowsTab = ({
           )}
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
               Select Movie *
             </label>
             <select
@@ -708,9 +708,9 @@ export const AdminShowsTab = ({
                 setFormData({ ...formData, movieId: e.target.value });
                 setConflictError(null);
               }}
-              className={`w-full px-3.5 py-2 bg-slate-900 border ${
-                formErrors.movieId ? 'border-rose-500' : 'border-slate-800'
-              } rounded-xl text-sm text-slate-100 focus:outline-none focus:border-emerald-500`}
+              className={`w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-900 border ${
+                formErrors.movieId ? 'border-rose-500' : 'border-slate-300 dark:border-slate-800'
+              } rounded-xl text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-500`}
             >
               <option value="">Select a movie from catalog...</option>
               {movies.map((m) => (
@@ -723,7 +723,7 @@ export const AdminShowsTab = ({
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
               Select Cinema Screen & Hall *
             </label>
             <select
@@ -732,9 +732,9 @@ export const AdminShowsTab = ({
                 setFormData({ ...formData, screenId: e.target.value });
                 setConflictError(null);
               }}
-              className={`w-full px-3.5 py-2 bg-slate-900 border ${
-                formErrors.screenId ? 'border-rose-500' : 'border-slate-800'
-              } rounded-xl text-sm text-slate-100 focus:outline-none focus:border-emerald-500`}
+              className={`w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-900 border ${
+                formErrors.screenId ? 'border-rose-500' : 'border-slate-300 dark:border-slate-800'
+              } rounded-xl text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-500`}
             >
               <option value="">Select an available screen...</option>
               {screens.map((s) => (
@@ -749,7 +749,7 @@ export const AdminShowsTab = ({
           {/* Showtimes input: Single in Edit mode, Multi-Slot in Create mode */}
           {selectedShow ? (
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
                 Show Date & Time *
               </label>
               <input
@@ -759,22 +759,22 @@ export const AdminShowsTab = ({
                   setFormData({ ...formData, showTime: e.target.value });
                   setConflictError(null);
                 }}
-                className={`w-full px-3.5 py-2 bg-slate-900 border ${
-                  formErrors.showTime ? 'border-rose-500' : 'border-slate-800'
-                } rounded-xl text-sm text-slate-100 focus:outline-none focus:border-emerald-500`}
+                className={`w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-900 border ${
+                  formErrors.showTime ? 'border-rose-500' : 'border-slate-300 dark:border-slate-800'
+                } rounded-xl text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-500`}
               />
               {formErrors.showTime && <p className="text-xs text-rose-400 mt-1">{formErrors.showTime}</p>}
             </div>
           ) : (
             <div className="space-y-2.5">
               <div className="flex items-center justify-between">
-                <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
                   Showtime Slots ({formData.showTimes.length}) *
                 </label>
                 <button
                   type="button"
                   onClick={addShowtimeSlot}
-                  className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 flex items-center gap-1 transition-colors"
+                  className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 dark:hover:text-emerald-300 flex items-center gap-1 transition-colors"
                 >
                   <Plus className="w-3.5 h-3.5" /> Add Another Slot
                 </button>
@@ -788,13 +788,13 @@ export const AdminShowsTab = ({
                       type="datetime-local"
                       value={timeVal}
                       onChange={(e) => updateShowtimeSlot(idx, e.target.value)}
-                      className="flex-1 px-3.5 py-2 bg-slate-900 border border-slate-800 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-emerald-500"
+                      className="flex-1 px-3.5 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-500"
                     />
                     {formData.showTimes.length > 1 && (
                       <button
                         type="button"
                         onClick={() => removeShowtimeSlot(idx)}
-                        className="p-2 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 transition-colors"
+                        className="p-2 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 dark:text-rose-400 transition-colors"
                         title="Remove slot"
                       >
                         <X className="w-4 h-4" />
@@ -804,7 +804,7 @@ export const AdminShowsTab = ({
                 ))}
               </div>
               {formErrors.showTimes && <p className="text-xs text-rose-400 mt-1">{formErrors.showTimes}</p>}
-              <p className="text-[11px] text-slate-500">
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">
                 You can schedule multiple theatrical slots for this movie in a single operation. Each slot will be conflict-checked automatically.
               </p>
             </div>
@@ -812,7 +812,7 @@ export const AdminShowsTab = ({
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
                 Base Seat Price (₹) *
               </label>
               <input
@@ -821,15 +821,15 @@ export const AdminShowsTab = ({
                 min="1"
                 value={formData.basePrice}
                 onChange={(e) => setFormData({ ...formData, basePrice: e.target.value })}
-                className={`w-full px-3.5 py-2 bg-slate-900 border ${
-                  formErrors.basePrice ? 'border-rose-500' : 'border-slate-800'
-                } rounded-xl text-sm text-slate-100 focus:outline-none focus:border-emerald-500`}
+                className={`w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-900 border ${
+                  formErrors.basePrice ? 'border-rose-500' : 'border-slate-300 dark:border-slate-800'
+                } rounded-xl text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-500`}
               />
               {formErrors.basePrice && <p className="text-xs text-rose-400 mt-1">{formErrors.basePrice}</p>}
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
                 Premium Seat Price (₹) *
               </label>
               <input
@@ -838,19 +838,19 @@ export const AdminShowsTab = ({
                 min="1"
                 value={formData.premiumPrice}
                 onChange={(e) => setFormData({ ...formData, premiumPrice: e.target.value })}
-                className={`w-full px-3.5 py-2 bg-slate-900 border ${
-                  formErrors.premiumPrice ? 'border-rose-500' : 'border-slate-800'
-                } rounded-xl text-sm text-slate-100 focus:outline-none focus:border-emerald-500`}
+                className={`w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-900 border ${
+                  formErrors.premiumPrice ? 'border-rose-500' : 'border-slate-300 dark:border-slate-800'
+                } rounded-xl text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-500`}
               />
               {formErrors.premiumPrice && <p className="text-xs text-rose-400 mt-1">{formErrors.premiumPrice}</p>}
             </div>
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
             <button
               type="button"
               onClick={() => setModalOpen(false)}
-              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-semibold transition-colors"
+              className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-sm font-semibold transition-colors"
             >
               Cancel
             </button>
@@ -879,11 +879,11 @@ export const AdminShowsTab = ({
         maxWidth="max-w-md"
       >
         <div className="space-y-4">
-          <div className="flex items-start gap-3 p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300">
-            <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5 text-rose-400" />
+          <div className="flex items-start gap-3 p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-700 dark:text-rose-300">
+            <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5 text-rose-500 dark:text-rose-400" />
             <div className="text-sm">
-              <p className="font-semibold text-rose-200">Delete Showtime #{selectedShow?.id}?</p>
-              <p className="mt-1 text-xs text-rose-300/80">
+              <p className="font-semibold text-rose-900 dark:text-rose-200">Delete Showtime #{selectedShow?.id}?</p>
+              <p className="mt-1 text-xs text-rose-700/80 dark:text-rose-300/80">
                 This will permanently delete this show schedule and its seating matrix. Any existing customer bookings associated with this show may be affected.
               </p>
             </div>
@@ -892,7 +892,7 @@ export const AdminShowsTab = ({
           <div className="flex items-center justify-end gap-3 pt-2">
             <button
               onClick={() => setDeleteConfirmOpen(false)}
-              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-semibold transition-colors"
+              className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-sm font-semibold transition-colors"
             >
               Cancel
             </button>

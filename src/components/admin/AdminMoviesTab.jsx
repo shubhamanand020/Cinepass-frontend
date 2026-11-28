@@ -117,7 +117,7 @@ export const AdminMoviesTab = ({
             placeholder="Search catalog by title, genre, language..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-slate-900 border border-slate-800 rounded-xl text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-rose-500 transition-colors"
+            className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl text-sm text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-rose-500 transition-colors"
           />
         </div>
 
@@ -130,11 +130,11 @@ export const AdminMoviesTab = ({
       </div>
 
       {/* Movies Table */}
-      <div className="bg-slate-900/60 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+      <div className="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm dark:shadow-xl">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead>
-              <tr className="border-b border-slate-800 bg-slate-900/80 text-xs font-semibold uppercase tracking-wider text-slate-400">
+              <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/80 text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400">
                 <th className="py-3.5 px-4">Movie</th>
                 <th className="py-3.5 px-4">Genre</th>
                 <th className="py-3.5 px-4">Language</th>
@@ -143,7 +143,7 @@ export const AdminMoviesTab = ({
                 <th className="py-3.5 px-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
               {filteredMovies.length === 0 ? (
                 <tr>
                   <td colSpan="6" className="py-12 text-center text-slate-500 text-sm">
@@ -152,45 +152,47 @@ export const AdminMoviesTab = ({
                 </tr>
               ) : (
                 filteredMovies.map((movie) => (
-                  <tr key={movie.id} className="hover:bg-slate-800/30 transition-colors group">
+                  <tr key={movie.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors group">
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-3">
                         <img
                           src={movie.posterUrl || 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba'}
                           alt={movie.title}
-                          className="w-10 h-14 object-cover rounded-lg border border-slate-800 shadow"
+                          className="w-10 h-14 object-cover rounded-lg border border-slate-200 dark:border-slate-800 shadow-xs"
                           onError={(e) => {
                             e.target.src = 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba';
                           }}
                         />
                         <div>
-                          <p className="font-bold text-white group-hover:text-rose-400 transition-colors">
+                          <p className="font-bold text-slate-900 dark:text-white group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-colors">
                             {movie.title}
                           </p>
-                          <p className="text-xs text-slate-400 line-clamp-1 max-w-xs">
+                          <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-1 max-w-xs">
                             {movie.description || 'No description provided'}
                           </p>
                         </div>
                       </div>
                     </td>
                     <td className="py-3 px-4">
-                      <span className="px-2.5 py-1 rounded-md text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700">
+                      <span className="px-2.5 py-1 rounded-md text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
                         {movie.genre}
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-slate-300 flex items-center gap-1.5 mt-3">
-                      <Globe className="w-3.5 h-3.5 text-slate-500" />
-                      {movie.language}
+                    <td className="py-3 px-4 text-slate-700 dark:text-slate-300">
+                      <span className="flex items-center gap-1.5 text-xs font-medium">
+                        <Globe className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
+                        {movie.language}
+                      </span>
                     </td>
-                    <td className="py-3 px-4 text-slate-300">
-                      <span className="flex items-center gap-1.5 text-xs text-slate-300">
-                        <Clock className="w-3.5 h-3.5 text-slate-500" />
+                    <td className="py-3 px-4 text-slate-700 dark:text-slate-300">
+                      <span className="flex items-center gap-1.5 text-xs font-medium">
+                        <Clock className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
                         {movie.duration} mins
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-xs text-slate-400">
-                      <span className="flex items-center gap-1.5">
-                        <Calendar className="w-3.5 h-3.5 text-slate-500" />
+                    <td className="py-3 px-4 text-xs text-slate-600 dark:text-slate-400">
+                      <span className="flex items-center gap-1.5 font-medium">
+                        <Calendar className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
                         {movie.releaseDate}
                       </span>
                     </td>
@@ -199,14 +201,14 @@ export const AdminMoviesTab = ({
                         <button
                           onClick={() => openEditModal(movie)}
                           title="Edit Movie"
-                          className="p-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors"
+                          className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/80 dark:hover:bg-slate-700 text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white border border-slate-200 dark:border-slate-700 transition-colors"
                         >
                           <Edit3 className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => openDeleteModal(movie)}
                           title="Delete Movie"
-                          className="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 hover:text-rose-300 transition-colors"
+                          className="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 hover:text-rose-700 dark:text-rose-400 dark:hover:text-rose-300 border border-rose-500/20 transition-colors"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -229,7 +231,7 @@ export const AdminMoviesTab = ({
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
               Movie Title *
             </label>
             <input
@@ -237,16 +239,16 @@ export const AdminMoviesTab = ({
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               placeholder="e.g. Inception"
-              className={`w-full px-3.5 py-2 bg-slate-900 border ${
-                formErrors.title ? 'border-rose-500' : 'border-slate-800'
-              } rounded-xl text-sm text-slate-100 focus:outline-none focus:border-rose-500`}
+              className={`w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-900 border ${
+                formErrors.title ? 'border-rose-500' : 'border-slate-300 dark:border-slate-800'
+              } rounded-xl text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-rose-500`}
             />
             {formErrors.title && <p className="text-xs text-rose-400 mt-1">{formErrors.title}</p>}
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
                 Genre *
               </label>
               <input
@@ -254,15 +256,15 @@ export const AdminMoviesTab = ({
                 value={formData.genre}
                 onChange={(e) => setFormData({ ...formData, genre: e.target.value })}
                 placeholder="e.g. Sci-Fi, Action"
-                className={`w-full px-3.5 py-2 bg-slate-900 border ${
-                  formErrors.genre ? 'border-rose-500' : 'border-slate-800'
-                } rounded-xl text-sm text-slate-100 focus:outline-none focus:border-rose-500`}
+                className={`w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-900 border ${
+                  formErrors.genre ? 'border-rose-500' : 'border-slate-300 dark:border-slate-800'
+                } rounded-xl text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-rose-500`}
               />
               {formErrors.genre && <p className="text-xs text-rose-400 mt-1">{formErrors.genre}</p>}
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
                 Language *
               </label>
               <input
@@ -270,9 +272,9 @@ export const AdminMoviesTab = ({
                 value={formData.language}
                 onChange={(e) => setFormData({ ...formData, language: e.target.value })}
                 placeholder="e.g. English, Hindi"
-                className={`w-full px-3.5 py-2 bg-slate-900 border ${
-                  formErrors.language ? 'border-rose-500' : 'border-slate-800'
-                } rounded-xl text-sm text-slate-100 focus:outline-none focus:border-rose-500`}
+                className={`w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-900 border ${
+                  formErrors.language ? 'border-rose-500' : 'border-slate-300 dark:border-slate-800'
+                } rounded-xl text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-rose-500`}
               />
               {formErrors.language && <p className="text-xs text-rose-400 mt-1">{formErrors.language}</p>}
             </div>
@@ -280,7 +282,7 @@ export const AdminMoviesTab = ({
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
                 Duration (minutes) *
               </label>
               <input
@@ -288,31 +290,31 @@ export const AdminMoviesTab = ({
                 value={formData.duration}
                 onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
                 placeholder="e.g. 148"
-                className={`w-full px-3.5 py-2 bg-slate-900 border ${
-                  formErrors.duration ? 'border-rose-500' : 'border-slate-800'
-                } rounded-xl text-sm text-slate-100 focus:outline-none focus:border-rose-500`}
+                className={`w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-900 border ${
+                  formErrors.duration ? 'border-rose-500' : 'border-slate-300 dark:border-slate-800'
+                } rounded-xl text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-rose-500`}
               />
               {formErrors.duration && <p className="text-xs text-rose-400 mt-1">{formErrors.duration}</p>}
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
                 Release Date *
               </label>
               <input
                 type="date"
                 value={formData.releaseDate}
                 onChange={(e) => setFormData({ ...formData, releaseDate: e.target.value })}
-                className={`w-full px-3.5 py-2 bg-slate-900 border ${
-                  formErrors.releaseDate ? 'border-rose-500' : 'border-slate-800'
-                } rounded-xl text-sm text-slate-100 focus:outline-none focus:border-rose-500`}
+                className={`w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-900 border ${
+                  formErrors.releaseDate ? 'border-rose-500' : 'border-slate-300 dark:border-slate-800'
+                } rounded-xl text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-rose-500`}
               />
               {formErrors.releaseDate && <p className="text-xs text-rose-400 mt-1">{formErrors.releaseDate}</p>}
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
               Poster Image URL
             </label>
             <input
@@ -320,12 +322,12 @@ export const AdminMoviesTab = ({
               value={formData.posterUrl}
               onChange={(e) => setFormData({ ...formData, posterUrl: e.target.value })}
               placeholder="https://image-url.com/poster.jpg"
-              className="w-full px-3.5 py-2 bg-slate-900 border border-slate-800 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-rose-500"
+              className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-rose-500"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center justify-between">
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5 flex items-center justify-between">
               <span>YouTube Trailer URL</span>
               <span className="text-[10px] text-slate-500 lowercase">https://youtube.com/watch?v=...</span>
             </label>
@@ -334,12 +336,12 @@ export const AdminMoviesTab = ({
               value={formData.trailerUrl}
               onChange={(e) => setFormData({ ...formData, trailerUrl: e.target.value })}
               placeholder="e.g. https://www.youtube.com/watch?v=zSWdZVtXT7E"
-              className="w-full px-3.5 py-2 bg-slate-900 border border-slate-800 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-rose-500"
+              className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-rose-500"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
               Description / Synopsis
             </label>
             <textarea
@@ -347,15 +349,15 @@ export const AdminMoviesTab = ({
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               placeholder="Brief narrative of the movie..."
-              className="w-full px-3.5 py-2 bg-slate-900 border border-slate-800 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-rose-500"
+              className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-rose-500"
             />
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
             <button
               type="button"
               onClick={() => setModalOpen(false)}
-              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-semibold transition-colors"
+              className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-sm font-semibold transition-colors"
             >
               Cancel
             </button>
@@ -378,11 +380,11 @@ export const AdminMoviesTab = ({
         maxWidth="max-w-md"
       >
         <div className="space-y-4">
-          <div className="flex items-start gap-3 p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300">
-            <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5 text-rose-400" />
+          <div className="flex items-start gap-3 p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-700 dark:text-rose-300">
+            <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5 text-rose-500 dark:text-rose-400" />
             <div className="text-sm">
-              <p className="font-semibold text-rose-200">Delete "{selectedMovie?.title}"?</p>
-              <p className="mt-1 text-xs text-rose-300/80">
+              <p className="font-semibold text-rose-900 dark:text-rose-200">Delete "{selectedMovie?.title}"?</p>
+              <p className="mt-1 text-xs text-rose-700/80 dark:text-rose-300/80">
                 This action is permanent and will remove the movie from the catalog. Shows associated with this movie will remain unaffected or may be orphaned.
               </p>
             </div>
@@ -391,7 +393,7 @@ export const AdminMoviesTab = ({
           <div className="flex items-center justify-end gap-3 pt-2">
             <button
               onClick={() => setDeleteConfirmOpen(false)}
-              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-semibold transition-colors"
+              className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-sm font-semibold transition-colors"
             >
               Cancel
             </button>

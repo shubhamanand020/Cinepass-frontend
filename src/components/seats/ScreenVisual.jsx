@@ -17,7 +17,7 @@ export const ScreenVisual = () => {
       </div>
 
       {/* Screen Label */}
-      <div className="mt-2 flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-slate-400">
+      <div className="mt-2 flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">
         <Monitor className="w-3.5 h-3.5 text-rose-500" />
         <span>All Eyes This Way • Cinema Screen</span>
       </div>
