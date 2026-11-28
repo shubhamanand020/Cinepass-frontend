@@ -35,17 +35,29 @@ apiClient.interceptors.response.use(
       window.dispatchEvent(new CustomEvent('cinepass:unauthorized'));
     }
 
-    // Extract cleanest error message
-    const message =
+    const status = error.response?.status;
+    let message =
       error.response?.data?.message ||
       error.response?.data?.error ||
       (typeof error.response?.data === 'string' ? error.response.data : null) ||
       error.message ||
       'An unexpected error occurred';
 
-    return Promise.reject(new Error(message));
+    // Normalize concurrent seat booking conflicts into user-friendly notice
+    if (
+      status === 409 ||
+      message.toLowerCase().includes('unavailable') ||
+      message.toLowerCase().includes('conflict') ||
+      message.toLowerCase().includes('already taken')
+    ) {
+      message = 'Seat is held by someone else. Please try again later.';
+    }
+
+    const customError = new Error(message);
+    customError.status = status;
+    customError.response = error.response;
+    return Promise.reject(customError);
   }
 );
 
 export default apiClient;
-

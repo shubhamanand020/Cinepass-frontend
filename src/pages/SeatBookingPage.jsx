@@ -223,7 +223,19 @@ export const SeatBookingPage = () => {
       const live = await showApi.getAvailability(showId);
       if (live) setSeats(enrichSeatsWithScreenConfig(live, screen, show));
     } catch (err) {
-      toastError(err.message || 'Could not hold seats. Some may already be taken.');
+      const isSeatConflict =
+        err.status === 409 ||
+        err.response?.status === 409 ||
+        err.message?.toLowerCase().includes('held') ||
+        err.message?.toLowerCase().includes('unavailable') ||
+        err.message?.toLowerCase().includes('conflict') ||
+        err.message?.toLowerCase().includes('taken');
+
+      const userMsg = isSeatConflict
+        ? 'Seat is held by someone else. Please try again later.'
+        : (err.message || 'Seat is held by someone else. Please try again later.');
+
+      toastError(userMsg);
       // Refresh to get fresh state
       loadShowAndSeats();
     } finally {
