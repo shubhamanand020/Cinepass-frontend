@@ -1,28 +1,55 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Clock, AlertTriangle } from 'lucide-react';
 
 export const HoldCountdownTimer = ({ expiresAt, onExpire }) => {
-  const [remaining, setRemaining] = useState(() => {
-    if (!expiresAt) return 0;
-    return Math.max(0, Math.floor((new Date(expiresAt).getTime() - Date.now()) / 1000));
-  });
+  const parseTargetMs = (str) => {
+    if (!str) return 0;
+    if (typeof str !== 'string') return new Date(str).getTime();
+    // Normalize ISO string to UTC if it doesn't already have a timezone offset or Z
+    const normalized = (str.endsWith('Z') || /[+-]\d{2}(:\d{2})?$/.test(str)) ? str : `${str}Z`;
+    const ms = new Date(normalized).getTime();
+    return isNaN(ms) ? 0 : ms;
+  };
+
+  const calculateRemaining = (str) => {
+    if (!str) return 300;
+    const target = parseTargetMs(str);
+    const diff = Math.floor((target - Date.now()) / 1000);
+    // If diff is reasonable (between 1 and 360 seconds), use exact server-synchronized diff
+    if (diff > 0 && diff <= 360) {
+      return diff;
+    }
+    // If diff is wildly in the past (> 10 minutes ago), it's truly expired
+    if (diff < -600) {
+      return 0;
+    }
+    // Otherwise fallback to 300s (5-minute hold) to protect against client clock skew
+    return 300;
+  };
+
+  const [remaining, setRemaining] = useState(() => calculateRemaining(expiresAt));
+  const hasStartedRef = useRef(false);
 
   useEffect(() => {
     if (!expiresAt) return;
 
-    const tick = () => {
-      const target = new Date(expiresAt).getTime();
-      const sec = Math.max(0, Math.floor((target - Date.now()) / 1000));
-      setRemaining(sec);
+    // Reset when expiresAt changes
+    setRemaining(calculateRemaining(expiresAt));
+    hasStartedRef.current = true;
 
-      if (sec <= 0) {
-        if (onExpire) onExpire();
-      }
+    const tick = () => {
+      setRemaining((prev) => {
+        if (prev <= 1) {
+          if (onExpire && hasStartedRef.current) {
+            onExpire();
+          }
+          return 0;
+        }
+        return prev - 1;
+      });
     };
 
-    tick();
     const timer = setInterval(tick, 1000);
-
     return () => clearInterval(timer);
   }, [expiresAt, onExpire]);
 
